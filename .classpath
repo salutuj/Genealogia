@@ -4,5 +4,16 @@
 	<classpathentry kind="src" path="testsrc"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_45"/>
+	<classpathentry kind="lib" path="C:/PROJ/train/tomcat8/apache-tomcat-8.0.29/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/spring-core-4.3.1.RELEASE.jar" sourcepath="docs/spring-core-4.3.1.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/spring-core-4.3.1.RELEASE-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/spring-web-4.3.1.RELEASE.jar" sourcepath="docs/spring-web-4.3.1.RELEASE-sources.jar"/>
+	<classpathentry kind="lib" path="lib/spring-webmvc-4.3.1.RELEASE.jar" sourcepath="docs/spring-webmvc-4.3.1.RELEASE-sources.jar"/>
+	<classpathentry kind="lib" path="lib/spring-beans-4.3.1.RELEASE.jar" sourcepath="docs/spring-beans-4.3.1.RELEASE-sources.jar"/>
+	<classpathentry kind="lib" path="lib/spring-context-4.3.1.RELEASE.jar" sourcepath="docs/spring-context-4.3.1.RELEASE-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
