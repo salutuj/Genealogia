@@ -1,0 +1,9 @@
+<div>
+  <h6>Family {{family.fammilyId}} details</h6>
+  <table>
+    <tr><td colspan="2">Familia&nbsp;{{family.name}}</td></tr>
+    <tr><td>Father:</td><td><a href="person-{{family.father.personId}}">{{family.father.firstName}}&nbsp;{{family.father.lastName}}</a></td></tr>
+    <tr><td>Mother:</td><td><a href="person-{{family.mother.personId}}">{{family.mother.firstName}}&nbsp;{{family.mother.lastName}}</a></td></tr>
+    <tr ng-repeat="child in family.children"><td>{{child.relationToParent}}:</td><td>{{child.firstName}}&nbsp;{{child.lastName}}</td></tr>    
+  </table>
+</div>

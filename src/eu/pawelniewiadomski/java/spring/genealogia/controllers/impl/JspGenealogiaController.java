@@ -22,48 +22,6 @@ import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
  * 
  * @author pawel.niewiadomski
  * 
- *         It’s a pretty straight-forward Spring based controller.
- * 
- * @Controller indicates that this class is a controller handling the requests
- *             with pattern mapped by @RequestMapping. Here with ‘/’, it is
- *             serving as default controller.
- * 
- *             Method listEmployees, annotated with @RequestMethod.GET, handling
- *             both the default URL ‘/’ as well as ‘/list’. It acts as handle
- *             for initial page of application, showing a list of existing
- *             employees.
- * 
- *             Method newEmployee is handling the GET request for the new
- *             employee registration page, showing page backed by a model
- *             Employee object.
- * 
- *             Method saveEmployee is annotated with @RequestMethod.POST, and
- *             will handle the form-submission POST requests for new employee
- *             registration (‘/new’). Notice the parameters and their orders in
- *             this method.
- * @Valid asks spring to validate the associated object(Employee). BindingResult
- *        contains the outcome of this validation and any error that might have
- *        occurred during this validation. Notice that BindingResult must come
- *        right after the validated object else spring won’t be able to validate
- *        and an exception been thrown. In case of validation failure, custom
- *        error messages(as we have configured in step 4) are shown.
- * 
- *        We have also included code to check for SSN uniqueness as it is
- *        declared to be unique in database. Before saving/updating an employee,
- *        we are checking if the SSN is unique. If not, we generate validation
- *        error and redirect to registration page. This piece of code
- *        demonstrate a way to fill it custom errors outside the validation
- *        framework as well while still using internationalized messages.
- * 
- *        Method editEmployee takes you to registration page with employee
- *        details filled in, while updateEmployee gets called when you click on
- *        update button after possible updation on gui.
- * 
- *        Method deleteEmployee is handling the deletion of an employee by it’s
- *        SSN number. Notice @PathVariable , which indicates that this parameter
- *        will be bound to variable in URI template (SSN in our case). As for as
- *        Annotation based configuration goes,this is all we need to do.
- * 
  *
  */
 @Controller

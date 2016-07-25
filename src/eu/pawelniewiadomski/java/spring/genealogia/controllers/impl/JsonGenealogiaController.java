@@ -44,13 +44,13 @@ public class JsonGenealogiaController {
     return familyConverter.convert(defaultFamily);
   }
 
-  @RequestMapping(value = { "/family-{familyId}.json" }, method = RequestMethod.GET)
+  @RequestMapping(value = { "family-{familyId}.json" }, method = RequestMethod.GET)
   public @ResponseBody String getFamily(@PathVariable String familyId) {
     FamilyModel family = familyService.findFamilyById(familyId);
     return familyConverter.convert(family);
   }
 
-  @RequestMapping(value = { "/person-{personId}.json" }, method = RequestMethod.GET)
+  @RequestMapping(value = { "person-{personId}.json" }, method = RequestMethod.GET)
   public @ResponseBody String getPerson(@PathVariable String personId) {
     PersonModel person = personService.findPersonById(personId);
     return personConverter.convert(person);
