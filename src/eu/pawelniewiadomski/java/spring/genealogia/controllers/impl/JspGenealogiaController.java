@@ -24,7 +24,7 @@ import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
  * 
  *
  */
-@Controller
+@Controller(value="jspGenealogiaController")
 @RequestMapping("/")
 public class JspGenealogiaController {
 

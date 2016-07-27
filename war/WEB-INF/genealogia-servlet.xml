@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://www.springframework.org/schema/beans"
-  xmlns:mvc="http://www.springframework.org/schema/mvc"
-  xmlns:context="http://www.springframework.org/schema/context"
-  xsi:schemaLocation="
+	xmlns="http://www.springframework.org/schema/beans" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
     http://www.springframework.org/schema/beans     
     http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/mvc 
@@ -12,28 +11,41 @@
     http://www.springframework.org/schema/context 
     http://www.springframework.org/schema/context/spring-context.xsd">
 
+	
 
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+	<mvc:annotation-driven />
 
-	<context:component-scan base-package="eu.pawelniewiadomski.java.spring.genealogia.controllers" />
+	<alias alias="personService" name="defaultPersonService" />
+	<bean id="defaultPersonService"	class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultPersonService" />
 
-  <mvc:resources mapping="/resources/**" location="/resources/" />
-  <mvc:annotation-driven />
-		
-  <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
-        <property name="prefix" value="/WEB-INF/jsp/"></property>
-        <property name="suffix" value=".jsp"></property>        
-    </bean>
-    
+	<alias alias="familyService" name="defaultFamilyService" />
+	<bean id="defaultFamilyService"	class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultFamilyService" />
+
+  <alias alias="personConverter" name="defaultPersonConverter" />
+  <bean id="defaultPersonConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.impl.PersonConverter" />
   
-  
-  <!-- bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-    <property name="basename" value="messages"/>
-  </bean -->
+  <alias alias="familyConverter" name="defaultFamilyConverter" />
+  <bean id="defaultFamilyConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.impl.FamilyConverter" />
 
-  <bean name="/genealogia.html" class="eu.pawelniewiadomski.java.spring.genealogia.GenealogiaController">
-    <property name="familyService" ref="familyService"/>
-    <property name="personService" ref="personService"/>
-  </bean>
-        
+  <context:component-scan base-package="eu.pawelniewiadomski.java.spring.genealogia.controllers" />
+	<alias alias="genealogiaController" name="jsonGenealogiaController" />
+
+
+	<bean id="viewResolver"	class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
+		<property name="prefix" value="/WEB-INF/jsp/"></property>
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+
+
+
+	<!-- bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"> 
+		<property name="basename" value="messages"/> </bean -->
+
+	<!-- bean name="/genealogia.html"	ref="genealogiaController">
+		<property name="familyService" ref="familyService" />
+		<property name="personService" ref="personService" />
+	</bean -->
+
 </beans>

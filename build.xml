@@ -3,11 +3,13 @@
 <project name="Genealogia" basedir="." default="usage">
     <property file="build.properties"/>
     <property name="src.dir" value="src"/>
+	<property name="lib.dir" value="lib"/>
 	<property name="gensrc.dir" value="gensrc"/>
 	<property name="test.dir" value="testsrc"/>
 	<property name="resources.dir" value="resources"/>
     <property name="web.dir" value="war"/>
-    <property name="build.dir" value="${web.dir}/WEB-INF/classes"/>
+    <property name="build.classes.dir" value="${web.dir}/WEB-INF/classes"/>
+    <property name="build.lib.dir" value="${web.dir}/WEB-INF/lib"/>
     <property name="name" value="Genealogia"/>
 	<property name="thejava.version" value="1.8"/>
 	
@@ -15,13 +17,14 @@
         <fileset dir="${web.dir}/WEB-INF/lib">
             <include name="*.jar"/>
         </fileset>
-        <!-- We need the servlet API classes: -->
-        <!--  * for Tomcat 5/6 use servlet-api.jar -->
-        <!--  * for other app servers - check the docs -->
+        <fileset dir="${lib.dir}">
+            <include name="*.jar"/>
+        </fileset>
+        <!-- We need the servlet API classes -->        
         <fileset dir="${appserver.lib}">
             <include name="servlet*.jar"/>
         </fileset>
-        <pathelement path="${build.dir}"/>
+        <pathelement path="${build.classes.dir}"/>
     </path>
 
     <target name="usage">
@@ -42,13 +45,18 @@
     </target>
 
     <target name="build" description="Compile main source tree java files">
-        <mkdir dir="${build.dir}"/>
-        <javac destdir="${build.dir}" source="${thejava.version}" target="${thejava.version}" debug="true"
+        <mkdir dir="${build.classes.dir}"/>
+        <javac destdir="${build.classes.dir}" source="${thejava.version}" target="${thejava.version}" debug="true"
                deprecation="false" optimize="false" failonerror="true">
             <src path="${src.dir}"/>
             <classpath refid="master-classpath"/>
         </javac>
-    	<copy todir="${build.dir}" preservelastmodified="true">
+        <copy todir="${build.lib.dir}" preservelastmodified="true">
+    	  <fileset dir="${lib.dir}">
+    	    <include name="**/*.jar"/>
+    	  </fileset>
+    	</copy>
+    	<copy todir="${build.classes.dir}" preservelastmodified="true">
     	  <fileset dir="${resources.dir}">
     	    <include name="**/*.*"/>
     	  </fileset>
@@ -58,8 +66,8 @@
 	
 	        
 	<target name="buildtests" description="Compile test tree java files">
-	  <mkdir dir="${build.dir}"/>
-	  <javac destdir="${build.dir}" source="${thejava.version}" target="${thejava.version}" debug="true"
+	  <mkdir dir="${build.classes.dir}"/>
+	  <javac destdir="${build.classes.dir}" source="${thejava.version}" target="${thejava.version}" debug="true"
 	    deprecation="false" optimize="false" failonerror="true">
 	    <src path="${test.dir}"/>
 	    <classpath refid="master-classpath"/>
@@ -71,7 +79,7 @@
 	     <classpath refid="master-classpath"/>
 	     <formatter type="brief" usefile="false"/>
 	     <batchtest>
-	       <fileset dir="${build.dir}">
+	       <fileset dir="${build.classes.dir}">
 	         <include name="**/*Test.*"/>
 	       </fileset>
 	     </batchtest>
@@ -112,8 +120,11 @@
 	
 	<target name="clean" description="Clean output directories">
 	        <delete>
-	            <fileset dir="${build.dir}">
+	            <fileset dir="${build.classes.dir}">
 	                <include name="**/*"/>
+	            </fileset>
+	        	<fileset dir="${build.lib.dir}">
+	        		<include name="**/*"/>
 	            </fileset>
 	        </delete>
 	 </target>
