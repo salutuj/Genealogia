@@ -3,17 +3,24 @@ package eu.pawelniewiadomski.java.spring.genealogia.converters.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import eu.pawelniewiadomski.java.spring.genealogia.converters.JsonConverter;
 import eu.pawelniewiadomski.java.spring.genealogia.model.FamilyModel;
 
 public class FamilyConverter extends JsonConverter<FamilyModel>{
 
+  @Autowired
+  PersonConverter personConverter;
+  
   @Override
   public String convert(FamilyModel source) {
-    Map<String, Object> target = new HashMap<String,Object>();
-    target.put("personId", source.getId());
-    target.put("father", source.getFather());
-    target.put("mother", source.getMother());    
+    Map<String, Object> target = new HashMap<String,Object>();    
+    target.put("id", source.getId());
+    target.put("name", source.getId());
+    target.put("father", personConverter.convert(source.getFather()));
+    target.put("mother", personConverter.convert(source.getMother()));   
+    
     return convertToJsonObject(target);
   }
 

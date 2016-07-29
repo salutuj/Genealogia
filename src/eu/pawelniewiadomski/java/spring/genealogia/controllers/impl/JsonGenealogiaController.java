@@ -22,7 +22,6 @@ import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
  */
 
 @Controller(value="jsonGenealogiaController")
-@RequestMapping("/")
 public class JsonGenealogiaController {
 
   protected static final Log LOG = LogFactory.getLog(JsonGenealogiaController.class);
@@ -39,7 +38,7 @@ public class JsonGenealogiaController {
   @Autowired
   private AbstractConverter<PersonModel, String> personConverter;
 
-  @RequestMapping(value = { "/json" }, method = RequestMethod.GET)
+  @RequestMapping(value = { "/defaultFamily.json" }, method = RequestMethod.GET)
   public @ResponseBody String getDefaultFamily() {    
     FamilyModel defaultFamily = familyService.getDefaultFamily();
     return familyConverter.convert(defaultFamily);

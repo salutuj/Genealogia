@@ -24,39 +24,46 @@ import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
  * 
  *
  */
-@Controller(value="jspGenealogiaController")
-@RequestMapping("/")
+@Controller(value = "jspGenealogiaController")
 public class JspGenealogiaController {
 
-	protected static final Log LOG = LogFactory.getLog(JspGenealogiaController.class);
-	
-	@Autowired
-	PersonService personService;
+//  protected static final Log LOG = LogFactory.getLog(JspGenealogiaController.class);
 
-	@Autowired
-	FamilyService familyService;
+//  @Autowired
+//  PersonService personService;
+//
+//  @Autowired
+//  FamilyService familyService;
 
-	@RequestMapping(value = { "/" }, method = RequestMethod.GET)
-	public ModelAndView getDefaultFamily() {
-		Map<String, Object> models = new HashMap<String, Object>();
-		FamilyModel defaultFamily = familyService.getDefaultFamily();
-		models.put("defaultFamily", defaultFamily);
-		return new ModelAndView("defaultFamilyView", models);
-	}
+//  @RequestMapping(value = { "/" }, method = RequestMethod.GET)
+//  public String getDefaultFamily() {
+//    return "genealogia";
+//  }
 
-	@RequestMapping(value = { "/family-{familyId}" }, method = RequestMethod.GET)
-	public ModelAndView getFamily( @PathVariable String familyId, ModelMap model) {
-		Map<String, Object> models = new HashMap<String, Object>();
-		FamilyModel family = familyService.findFamilyById(familyId);
-		models.put("family", family);
-		return new ModelAndView("familyView", models);
-	}
-	
-	@RequestMapping(value = { "/person-{personId}" }, method = RequestMethod.GET)
-	public String getPerson(@PathVariable String personId, ModelMap model) {
-		PersonModel person = personService.findPersonById(personId);
-		model.addAttribute("person", person);
-		return "person";
-	}
+  // @RequestMapping(value = { "/" }, method = RequestMethod.GET)
+  // public ModelAndView getDefaultFamily() {
+  // Map<String, Object> models = new HashMap<String, Object>();
+  // FamilyModel defaultFamily = familyService.getDefaultFamily();
+  // models.put("defaultFamily", defaultFamily);
+  // return new ModelAndView("genealogia", models);
+  // }
+  //
+  // @RequestMapping(value = { "/family-{familyId}" }, method =
+  // RequestMethod.GET)
+  // public ModelAndView getFamily( @PathVariable String familyId, ModelMap
+  // model) {
+  // Map<String, Object> models = new HashMap<String, Object>();
+  // FamilyModel family = familyService.findFamilyById(familyId);
+  // models.put("family", family);
+  // return new ModelAndView("familyView", models);
+  // }
+  //
+  // @RequestMapping(value = { "/person-{personId}" }, method =
+  // RequestMethod.GET)
+  // public String getPerson(@PathVariable String personId, ModelMap model) {
+  // PersonModel person = personService.findPersonById(personId);
+  // model.addAttribute("person", person);
+  // return "person";
+  // }
 
 }

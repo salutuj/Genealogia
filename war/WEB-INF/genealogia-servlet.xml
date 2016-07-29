@@ -10,11 +10,20 @@
     http://www.springframework.org/schema/mvc/spring-mvc.xsd
     http://www.springframework.org/schema/context 
     http://www.springframework.org/schema/context/spring-context.xsd">
-
+    
+	<mvc:resources mapping="/js/**" location="/js/" />
+	<mvc:resources mapping="/css/**" location="/css/" />
+	<mvc:resources mapping="/ng-views/**" location="/ng-views/" />	
+	<mvc:resources mapping="/*.html" location="/" />
 	
-
-	<mvc:resources mapping="/resources/**" location="/resources/" />
 	<mvc:annotation-driven />
+  <context:component-scan base-package="eu.pawelniewiadomski.java.spring.genealogia.controllers" /> 
+
+  <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
+    <property name="prefix" value="/WEB-INF/jsp/"></property>
+    <property name="suffix" value=".jsp"></property>
+  </bean>
 
 	<alias alias="personService" name="defaultPersonService" />
 	<bean id="defaultPersonService"	class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultPersonService" />
@@ -27,25 +36,5 @@
   
   <alias alias="familyConverter" name="defaultFamilyConverter" />
   <bean id="defaultFamilyConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.impl.FamilyConverter" />
-
-  <context:component-scan base-package="eu.pawelniewiadomski.java.spring.genealogia.controllers" />
-	<alias alias="genealogiaController" name="jsonGenealogiaController" />
-
-
-	<bean id="viewResolver"	class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
-		<property name="prefix" value="/WEB-INF/jsp/"></property>
-		<property name="suffix" value=".jsp"></property>
-	</bean>
-
-
-
-	<!-- bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource"> 
-		<property name="basename" value="messages"/> </bean -->
-
-	<!-- bean name="/genealogia.html"	ref="genealogiaController">
-		<property name="familyService" ref="familyService" />
-		<property name="personService" ref="personService" />
-	</bean -->
 
 </beans>
