@@ -3,3 +3,4 @@ Genealogia.war
 *.class
 war/WEB-INF/lib/spring-*-4.3.1.RELEASE.jar
 war/WEB-INF/lib/commons-logging-1.2.jar
+war/WEB-INF/lib/*.jar
