@@ -1,5 +1,6 @@
 package eu.pawelniewiadomski.java.spring.genealogia.converters;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,9 +21,12 @@ public abstract class JsonConverter<M extends AbstractModel> implements Abstract
 
         json.append('"').append(param.getKey()).append("\": ");
         Object val = param.getValue();
-        if (val instanceof String)
-          json.append('"').append(val).append('"');
-        else json.append(val.toString());
+        if (val instanceof String || val instanceof Date)
+          json.append('"').append(val).append('"');       
+        else if ( val instanceof JsonObject )
+          json.append(((JsonObject)val).raw);
+        else
+          json.append(val.toString());
         json.append(',');
       }
       json.deleteCharAt(json.length() - 1);
