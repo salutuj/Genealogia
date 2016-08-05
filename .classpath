@@ -11,9 +11,40 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/spring-core-4.3.1.RELEASE-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/spring-web-4.3.1.RELEASE.jar" sourcepath="docs/spring-web-4.3.1.RELEASE-sources.jar"/>
-	<classpathentry kind="lib" path="lib/spring-webmvc-4.3.1.RELEASE.jar" sourcepath="docs/spring-webmvc-4.3.1.RELEASE-sources.jar"/>
-	<classpathentry kind="lib" path="lib/spring-beans-4.3.1.RELEASE.jar" sourcepath="docs/spring-beans-4.3.1.RELEASE-sources.jar"/>
-	<classpathentry kind="lib" path="lib/spring-context-4.3.1.RELEASE.jar" sourcepath="docs/spring-context-4.3.1.RELEASE-sources.jar"/>
+	<classpathentry kind="lib" path="lib/spring-web-4.3.1.RELEASE.jar" sourcepath="docs/spring-web-4.3.1.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/spring-web-4.3.1.RELEASE-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/spring-webmvc-4.3.1.RELEASE.jar" sourcepath="docs/spring-webmvc-4.3.1.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/spring-webmvc-4.3.1.RELEASE-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/spring-beans-4.3.1.RELEASE.jar" sourcepath="docs/spring-beans-4.3.1.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/spring-beans-4.3.1.RELEASE-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/spring-context-4.3.1.RELEASE.jar" sourcepath="docs/spring-context-4.3.1.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/spring-context-4.3.1.RELEASE-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/spring-jdbc-4.3.1.RELEASE.jar" sourcepath="docs/spring-jdbc-4.3.1.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/spring-jdbc-4.3.1.RELEASE-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/spring-tx-4.3.1.RELEASE.jar" sourcepath="docs/spring-tx-4.3.1.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/spring-tx-4.3.1.RELEASE-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/gedcom4j-3.0.2.jar" sourcepath="docs/gedcom4j-3.0.2-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/gedcom4j-3.0.2-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

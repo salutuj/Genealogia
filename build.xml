@@ -176,12 +176,12 @@
             password="${tomcat.manager.password}" path="/${name}"/>
   </target>
   
-	<target name="start" description="Start Tomcat server">
+	<target name="start" description="Start app on Tomcat server">
     <start url="${tomcat.manager.url}" username="${tomcat.manager.username}"
            password="${tomcat.manager.password}" path="/${name}" />
   </target>
   
-	<target name="stop" description="Stop Tomcat server">
+	<target name="stop" description="Stop app on Tomcat server">
     <stop url="${tomcat.manager.url}" username="${tomcat.manager.username}"
           password="${tomcat.manager.password}" path="/${name}"/>
   </target>
@@ -191,7 +191,7 @@
   </target>
 
 	
-	<path id="tomcat.classpath">
+	<!-- path id="tomcat.classpath">
 	    <fileset dir="${tomcat.lib}">
 	        <include name="**/*.jar"/>
 	        <include name="**/*.zip"/>
@@ -200,28 +200,46 @@
 	    <pathelement location="${tomcat.bin}/tomcat-juli.jar"/>
 	</path>
 	
-	<target name="debug-start" description="Start Tomcat server in debug mode">
-	 	<java classname="org.apache.catalina.startup.Bootstrap" fork="true"  classpathref="tomcat.classpath">
-	 		<jvmarg value="${tomcat.debug.args}"/>
-	 		<jvmarg value="-Dcatalina.home=${tomcat.home}"/>	 		
-	 		<arg line="startd"/>
-	 	</java>
-		<sleep seconds="2"/>
+	<target name="debug-start" description="Start Tomcat server in debug mode">	
+	 	  <java classname="org.apache.catalina.startup.Bootstrap" fork="true" classpathref="tomcat.classpath">
+	 		  <jvmarg value="${tomcat.debug.args}"/>
+	 		  <jvmarg value="-Dcatalina.home=${tomcat.home}"/>	 		
+	 	  </java>
 	</target>
+		
+	 <target name="debug-start-spawn" description="Start Tomcat server in debug mode"> 
+	      <java classname="org.apache.catalina.startup.Bootstrap" fork="true"  classpathref="tomcat.classpath">
+	      	<jvmarg value="-Xdebug"/>
+	        <jvmarg value="-Xrunjdwp:transport=dt_socket,address=localhost:8989,server=y,suspend=n"/>
+	        <jvmarg value="-Dcatalina.home=${tomcat.home}"/>      
+	      </java>
+	  </target>
+	    
+	 <target name="debug-start2" description="Start Tomcat server in debug mode"> 
+	      <java classname="org.apache.catalina.startup.Bootstrap" fork="true"  classpathref="tomcat.classpath">
+	        <jvmarg value="${tomcat.debug.args}"/>
+	        <jvmarg value="-Dcatalina.home=${tomcat.home}"/>      
+	      </java>
+	  </target>
 	
 	<target name="debug-stop" depends="debug-check-started" if="tomcat.started">
 	  <java classname="org.apache.catalina.startup.Bootstrap" fork="true" classpathref="tomcat.classpath">
 	    <jvmarg value="-Dcatalina.home=${tomcat.home}"/>
-	    <arg line="stopd"/>
+	    <arg line="stop"/>
 	  </java>
 	  <sleep seconds="5"/>
 	</target>
 	
+	<target name="stop-2"  >
+	    <exec executable="/home/local/WorkEnvironment/apache-tomcat-7.0.14/bin/">
+	        <arg value="shutdown.sh"/>
+	    </exec>
+	</target>
 	<target name="debug-check-started">
 	  <condition property="tomcat.started">
 	  	<socket server="localhost" port="${tomcat.port}"/>	  	
 	  </condition>
-	</target>
+	</target-->
 <!-- End Tomcat tasks -->
 
 <!-- Begin hsqldb targets -->
