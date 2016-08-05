@@ -1,4 +1,4 @@
-package eu.pawelniewiadomski.java.spring.genealogia.converters;
+package eu.pawelniewiadomski.java.spring.genealogia.converters.json;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import eu.pawelniewiadomski.java.spring.genealogia.converters.AbstractConverter;
 import eu.pawelniewiadomski.java.spring.genealogia.model.AbstractModel;
 
 public abstract class JsonConverter<M extends AbstractModel> implements AbstractConverter<M, String> {

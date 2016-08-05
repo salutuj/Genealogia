@@ -1,4 +1,4 @@
-package eu.pawelniewiadomski.java.spring.genealogia.converters;
+package eu.pawelniewiadomski.java.spring.genealogia.converters.json;
 
 public class JsonObject {
   public String raw;
