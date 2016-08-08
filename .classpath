@@ -46,5 +46,25 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/gedcom4j-3.0.2-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/testng-6.9.12.jar" sourcepath="docs/testng-6.9.12-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/testng-6.9.12-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/spring-test-4.3.1.RELEASE.jar" sourcepath="docs/spring-test-4.3.1.RELEASE-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/spring-test-4.3.1.RELEASE-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/jcommander-1.48.jar" sourcepath="docs/jcommander-1.48-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/jcommander-1.48-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/mockito-all-1.10.19.jar" sourcepath="docs/mockito-all-1.10.19-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/mockito-all-1.10.19-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,5 +1,6 @@
 package eu.pawelniewiadomski.java.spring.genealogia.model;
 
+import java.util.Collection;
 import java.util.Date;
 
 public class PersonModel extends AbstractModel {
@@ -13,6 +14,7 @@ public class PersonModel extends AbstractModel {
   private String placeOfBirth;
   private String maidenName;
   private String middleName;
+  private Collection<PersonEventModel> events;
 
   public String getId() {
     return id;
@@ -84,6 +86,20 @@ public class PersonModel extends AbstractModel {
 
   public void setPlaceOfBirth(String placeOfBirth) {
     this.placeOfBirth = placeOfBirth;
+  }
+
+  /**
+   * @return the events
+   */
+  public Collection<PersonEventModel> getEvents() {
+    return events;
+  }
+
+  /**
+   * @param events the events to set
+   */
+  public void setEvents(Collection<PersonEventModel> events) {
+    this.events = events;
   }
 
 }
