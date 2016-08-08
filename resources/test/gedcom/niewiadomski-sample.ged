@@ -1,0 +1,64 @@
+0 @F3@ FAM
+1 WIFE @I6@
+1 HUSB @I2@
+1 MARR
+2 DATE 15 AUG 2012
+2 PLAC Kęty
+1 CHAN
+2 DATE 25 JAN 2015
+3 TIME 00:02:42
+2 _WT_USER pawel
+1 CHIL @I181@
+0 @I2@ INDI
+1 NAME Paweł Henryk Piotr /Niewiadomski/
+2 GIVN Paweł Henryk Piotr
+2 SURN Niewiadomski
+2 NICK salutuj
+2 _AKA /afro/
+1 SEX M
+1 BIRT
+2 DATE 07 OCT 1983
+2 PLAC Katowice
+1 FAMC @F1@
+1 FAMS @F3@
+1 CHAN
+2 DATE 03 MAR 2014
+3 TIME 20:08:07
+2 _WT_USER pawel
+1 OBJE @M1@
+0 @I6@ INDI
+1 NAME Magdalena Lidia /Zelewska/
+2 GIVN Magdalena Lidia
+2 SURN Zelewska
+2 _MARNM Magdalena Lidia /Niewiadomska/
+1 SEX F
+1 BIRT
+2 DATE 06 AUG 1985
+2 PLAC Oświęcim
+1 FAMS @F3@
+1 OBJE @M5@
+1 CHAN
+2 DATE 06 MAY 2014
+3 TIME 20:51:10
+2 _WT_USER pawel
+1 FAMC @F50@
+0 @I181@ INDI
+1 NAME Maria Magdalena /Niewiadomska/
+2 GIVN Maria Magdalena
+2 SURN Niewiadomska
+1 SEX F
+1 BIRT
+2 DATE 13 JAN 2015
+2 PLAC Bogucice (Katowice)
+1 FAMC @F3@
+2 PEDI birth
+1 BAPM
+2 DATE 07 MAR 2015
+2 PLAC Ligota-Panewniki (Katowice)
+2 ADDR Bazylika oo. Franciszkanów
+1 OBJE @M8@
+1 CHAN
+2 DATE 05 JUL 2016
+3 TIME 20:18:31
+2 _WT_USER pawel
+1 OBJE @M47@
