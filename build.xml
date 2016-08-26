@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 
 <project name="Genealogia" basedir="." default="usage">
-  <property file="build.properties"/>
+	<property file="build.properties"/>
+	<property name="name" value="Genealogia"/>	
   <property name="src.dir" value="src"/>
 	<property name="lib.dir" value="lib"/>
 	<property name="gensrc.dir" value="gensrc"/>
@@ -9,9 +10,9 @@
 	<property name="resources.dir" value="resources"/>
   <property name="web.dir" value="war"/>
   <property name="build.classes.dir" value="${web.dir}/WEB-INF/classes"/>
-  <property name="build.lib.dir" value="${web.dir}/WEB-INF/lib"/>
-  <property name="name" value="Genealogia"/>
-	<property name="thejava.version" value="1.8"/>
+  <property name="build.lib.dir" value="${web.dir}/WEB-INF/lib"/>  
+	<property name="java.src.version" value="1.8"/>
+	<property name="java.tgt.version" value="1.8"/>
 	
   <path id="master-classpath">
     <fileset dir="${web.dir}/WEB-INF/lib">
@@ -21,33 +22,69 @@
       <include name="*.jar"/>
     </fileset>
     <!-- We need the servlet API classes -->        
-    <fileset dir="${tomcat.lib}">
+    <fileset dir="${tomcat.lib.dir}">
       <include name="servlet*.jar"/>
     </fileset>
     <pathelement path="${build.classes.dir}"/>
   </path>
-
+	
+	<path id="test-classpath">
+	    <fileset dir="${lib.dir}">
+	      <include name="*.jar"/>
+	    </fileset>
+	    <!-- We need the servlet API classes -->        
+	    <fileset dir="${tomcat.lib.dir}">
+	      <include name="servlet*.jar"/>
+	    </fileset>
+		  <pathelement path="${resources.dir}/test"/>
+	    <pathelement path="${build.classes.dir}"/>
+	</path>
+	
+	<!-- *** taskdefs *** -->
+	<taskdef name="testng" classpathref="test-classpath" classname="org.testng.TestNGAntTask" />
+	
+	<!-- *** targets *** -->
   <target name="usage">
-    <echo message=""/>
     <echo message="${name} build file"/>
     <echo message="-----------------------------------"/>
-    <echo message=""/>
     <echo message="Available targets are:"/>
-    <echo message=""/>
-    <echo message="build     --> Build the application"/>        
-    <echo message="debug     --> Start Tomcat server in debug mode"/>
-    <echo message="deploydir --> Deploy application in directory"/>
-    <echo message="deploywar --> Deploy application as a WAR file"/>        
-    <echo message="reload    --> Reload application in Tomcat"/>
-    <echo message="start     --> Start Tomcat server"/>
-    <echo message="stop      --> Stop Tomcat server"/>
-    <echo message="list      --> List Tomcat applications"/>
-    <echo message=""/>
+  	<echo message="clean         --> Clean"/>
+    <echo message="build         --> Build the application"/>
+  	<echo message="rebuild       --> Clean and build the application"/>
+  	<echo message="tests-build   --> Build tests"/>
+  	<echo message="tests-run     --> Run tests with ant"/>
+  	<echo message="deploy-dir    --> Deploy application in directory"/>
+  	<echo message="deploy-war    --> Deploy application as a WAR file"/>
+  	<echo message="undeploy      --> Undeploy application from Tomcat"/>
+  	<echo message=" * Tomcat built-in targets * "/>
+  	<echo message="tomcat-deploy --> Start Tomcat server"/>
+    <echo message="tomcat-start  --> Start Tomcat server"/>  	
+  	<echo message="tomcat-reload --> Reload application in Tomcat"/>
+    <echo message="tomcat-stop   --> Stop Tomcat server"/>
+    <echo message="tomcat-list   --> List Tomcat applications"/>
+  	<echo message=" * Other targets * "/>
+  	<echo message="tomcat-debug  --> Start Tomcat server in debug mode"/>
+  	<echo message=" * HSQLDB targets * "/>
+  	<echo message="hsqldb-start         --> start hsqldb"/>
+  	<echo message="hsqldb-create-tables --> create tables"/>
+  	<echo message="hsqldb-drop-tables   --> drop tables"/>
+  	<echo message="hsqldb-shutdown      --> shut db down"/>
   </target>
 
+  <target name="clean" description="Clean output directories">
+    <delete>
+      <fileset dir="${build.classes.dir}">
+        <include name="**/*"/>
+      </fileset>
+      <fileset dir="${build.lib.dir}">
+        <include name="**/*"/>
+      </fileset>
+    </delete>
+  </target>
+      	
   <target name="build" description="Compile main source tree java files">
     <mkdir dir="${build.classes.dir}"/>
-    <javac destdir="${build.classes.dir}" source="${thejava.version}" target="${thejava.version}" debug="true"
+    <javac destdir="${build.classes.dir}" source="${java.src.version}" target="${java.tgt.version}" debug="true"
       deprecation="false" optimize="false" failonerror="true">
       <src path="${src.dir}"/>
       <classpath refid="master-classpath"/>
@@ -64,31 +101,19 @@
     </copy>
   </target>
 	
-	<target name="clean" description="Clean output directories">
-	  <delete>
-	    <fileset dir="${build.classes.dir}">
-	      <include name="**/*"/>
-	    </fileset>
-	    <fileset dir="${build.lib.dir}">
-	      <include name="**/*"/>
-	    </fileset>
-	  </delete>
-	</target>
-
-
 	<target name="rebuild" depends="clean,build" description="Clean and build"/>
 	
-	<target name="buildtests" description="Compile test tree java files">
+	<target name="tests-build" description="Compile test tree java files">
 	  <mkdir dir="${build.classes.dir}"/>
-	  <javac destdir="${build.classes.dir}" source="${thejava.version}" target="${thejava.version}" debug="true"
+	  <javac destdir="${build.classes.dir}" source="${java.src.version}" target="${java.tgt.version}" debug="true"
 	    deprecation="false" optimize="false" failonerror="true">
 	    <src path="${test.dir}"/>
-	    <classpath refid="master-classpath"/>
+	    <classpath refid="test-classpath"/>
 	  </javac>
 	</target>
 	    
-	<target name="tests" depends="build, buildtests" description="Run tests">
-	  <junit printsummary="on" fork="false" haltonfailure="false" failureproperty="tests.failed" showoutput="true">
+	<target name="tests-run" depends="build, tests-build" description="Run tests">
+	  <!--<junit printsummary="on" fork="false" haltonfailure="false" failureproperty="tests.failed" showoutput="true">
 	    <classpath refid="master-classpath"/>
 	    <formatter type="brief" usefile="false"/>
 	    <batchtest>
@@ -96,7 +121,11 @@
 	        <include name="**/*Test.*"/>
 	      </fileset>
 	    </batchtest>
-	  </junit>
+	  </junit>-->
+		<testng mode="testng" classpathref="test-classpath" 
+			      failureproperty="tests.failed" verbose="1">
+			<classfileset dir="${build.classes.dir}" includes="**/*Test.class"/>
+		</testng>
 	  <fail if="tests.failed">
 	            tests.failed=${tests.failed}
 	            ***********************************************************
@@ -106,98 +135,111 @@
 	            ***********************************************************
 	  </fail>
 	</target>
+	
+	 <target name="tests-debug"  depends="build, tests-build" description="Debug tests">
+	    <testng mode="testng" dumpCommand="true" classpathref="test-classpath" 
+	            failureproperty="tests.failed" verbose="2">
+	      <classfileset dir="${build.classes.dir}" includes="**/*Test.class"/>
+	      <!--<jvmarg line="-agentlib:jdwp=transport=dt_socket,address=localhost:8990,server=y,suspend=y" />-->
+	    	<jvmarg value="-Xdebug"/>
+	    	<jvmarg value="-Xnoagent"/> 
+	    	<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8990" />
+	    </testng>
+	  </target>
     
-	<target name="deploydir" depends="build" description="Deploy application">
-    <copy todir="${tomcat.deploydir.path}/${name}" preservelastmodified="true">
+	<target name="deploy-dir" depends="build" description="Deploy application">
+    <copy todir="${tomcat.deploy.dir}/${name}" preservelastmodified="true">
       <fileset dir="${web.dir}">
         <include name="**/*.*"/>
       </fileset>
     </copy>
   </target>
 
-  <target name="deploywar" depends="build" description="Deploy application as a WAR file">
+  <target name="deploy-war" depends="build" description="Deploy application as a WAR file">
     <war destfile="${name}.war" webxml="${web.dir}/WEB-INF/web.xml">
       <fileset dir="${web.dir}">
         <include name="**/*.*"/>
       </fileset>
     </war>
-    <copy todir="${tomcat.deploydir.path}" preservelastmodified="true">
+    <move todir="${tomcat.deploy.dir}" preservelastmodified="true">
       <fileset dir=".">
         <include name="*.war"/>
       </fileset>
-    </copy>
+    </move>
   </target>
     
 	<target name="undeploy" description="Un-Deploy application">
 	  <delete>
-	    <fileset dir="${tomcat.deploydir.path}/${name}">
+	    <fileset dir="${tomcat.deploy.dir}/${name}">
 	      <include name="**/*.*"/>
 	    </fileset>
-	  	<fileset dir="${tomcat.deploydir.path}">
+	  	<fileset dir="${tomcat.deploy.dir}">
 	      <include name="${name}.war"/>
 	  	</fileset>
 	  </delete>
 	</target>
 	
-<!-- ============================================================== -->
-<!-- Tomcat tasks - remove these if you don't have Tomcat installed -->
-<!-- ============================================================== -->
+  <!-- ============================================================== -->
+  <!-- Tomcat tasks - remove these if you don't have Tomcat installed -->
+  <!-- ============================================================== -->
+	
   <path id="catalina-ant-classpath">
     <!-- We need the Catalina jars for Tomcat; * for other app servers - check the docs -->
-    <fileset dir="${tomcat.lib}">
+    <fileset dir="${tomcat.lib.dir}">
       <include name="catalina-ant.jar"/>
       <include name="tomcat-util.jar"/>    	
     </fileset>
   </path>
 
-  <taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask">
+  <taskdef name="tomcat-deploy" classname="org.apache.catalina.ant.DeployTask">
     <classpath refid="catalina-ant-classpath"/>
   </taskdef>
-  <taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask">
+  <taskdef name="tomcat-reload" classname="org.apache.catalina.ant.ReloadTask">
     <classpath refid="catalina-ant-classpath"/>
   </taskdef>
-  <taskdef name="list" classname="org.apache.catalina.ant.ListTask">
+  <taskdef name="tomcat-list" classname="org.apache.catalina.ant.ListTask">
     <classpath refid="catalina-ant-classpath"/>
   </taskdef>
-  <taskdef name="start" classname="org.apache.catalina.ant.StartTask" >
+  <taskdef name="tomcat-start" classname="org.apache.catalina.ant.StartTask" >
     <classpath refid="catalina-ant-classpath"/>
   </taskdef>
-  <taskdef name="stop" classname="org.apache.catalina.ant.StopTask">
+  <taskdef name="tomcat-stop" classname="org.apache.catalina.ant.StopTask">
     <classpath refid="catalina-ant-classpath"/>
   </taskdef>
   
-	<target name="deploy" description="Deploy application in Tomcat 8">
+	<target name="tomcat-deploy" description="Deploy application in Tomcat 8">
     <deploy url="${tomcat.manager.url}" username="${tomcat.manager.username}"
             password="${tomcat.manager.password}" path="/${name}" war="${name}.war"/>
   </target>
   
-	<target name="reload" description="Reload application in Tomcat">
+	<target name="tomcat-reload" description="Reload application in Tomcat">
     <reload url="${tomcat.manager.url}" username="${tomcat.manager.username}"
             password="${tomcat.manager.password}" path="/${name}"/>
   </target>
   
-	<target name="start" description="Start app on Tomcat server">
+	<target name="tomcat-start" description="Start app on Tomcat server">
     <start url="${tomcat.manager.url}" username="${tomcat.manager.username}"
            password="${tomcat.manager.password}" path="/${name}" />
   </target>
   
-	<target name="stop" description="Stop app on Tomcat server">
+	<target name="tomcat-stop" description="Stop app on Tomcat server">
     <stop url="${tomcat.manager.url}" username="${tomcat.manager.username}"
           password="${tomcat.manager.password}" path="/${name}"/>
   </target>
 
-  <target name="list" description="List Tomcat applications">
-    <list url="${tomcat.manager.url}" username="${tomcat.manager.username}" password="${tomcat.manager.password}"/>
+  <target name="tomcat-list" description="List Tomcat applications">
+    <list url="${tomcat.manager.url}" username="${tomcat.manager.username}" 
+    	    password="${tomcat.manager.password}"/>
   </target>
 
 	
 	<!-- path id="tomcat.classpath">
-	    <fileset dir="${tomcat.lib}">
+	    <fileset dir="${tomcat.lib.dir}">
 	        <include name="**/*.jar"/>
 	        <include name="**/*.zip"/>
 	    </fileset>
-	    <pathelement location="${tomcat.bin}/bootstrap.jar"/>
-	    <pathelement location="${tomcat.bin}/tomcat-juli.jar"/>
+	    <pathelement location="${tomcat.bin.dir}/bootstrap.jar"/>
+	    <pathelement location="${tomcat.bin.dir}/tomcat-juli.jar"/>
 	</path>
 	
 	<target name="debug-start" description="Start Tomcat server in debug mode">	
@@ -242,32 +284,37 @@
 	</target-->
 <!-- End Tomcat tasks -->
 
-<!-- Begin hsqldb targets -->
-	<target name="DB-createTables">
-	  <echo message="CREATE TABLES USING: ${db.driver} ${db.url}"/>
-	  <sql driver="${db.driver}" url="${db.url}" userid="${db.user}" password="${db.pw}"
-	       src="hsqldb/create_genealogia_example.sql" onerror="continue" >  
+	<!-- ============================================================== -->
+	<!-- HSQLDB tasks - remove these if you don't have Tomcat installed -->
+	<!-- ============================================================== -->
+	  
+  <!-- Begin hsqldb targets -->
+	<target name="hsqldb-start">
+	    <echo message="START HSQLDB"/>	    
+	</target>
+	
+	<target name="hsqldb-create-tables">
+	  <echo message="CREATE TABLES USING: ${hsqldb.driver} ${hsqldb.url}"/>
+	  <sql driver="${hsqldb.driver}" url="${hsqldb.url}" userid="${hsqldb.user}" password="${hsqldb.pass}"
+	       src="hsqldb/genealogia-create.sql" onerror="continue" >  
 	    <classpath refid="master-classpath"/>
 	  </sql> 
 	</target>
 
-	<target name="DB-dropTables">
-	  <echo message="DROP TABLES USING: ${db.driver} ${db.url}"/>
-	  <sql driver="${db.driver}" url="${db.url}" userid="${db.user}" password="${db.pw}" onerror="continue">  
+	<target name="hsqldb-drop-tables">
+	  <echo message="DROP TABLES USING: ${hsqldb.driver} ${hsqldb.url}"/>
+	  <sql driver="${hsqldb.driver}" url="${hsqldb.url}" userid="${hsqldb.user}" password="${hsqldb.pass}" 
+	  	src="hsqldb/genealogia-drop.sql" onerror="continue">  
       <classpath refid="master-classpath"/>
-	  	
-	    DROP TABLE products;
-
 	  </sql> 
   </target>
 	    
-	<target name="DB-shutdownDb">
+	<target name="hsqldb-shutdown">
 	  <echo message="SHUT DOWN DATABASE USING: ${db.driver} ${db.url}"/>
-	  <sql driver="${db.driver}" url="${db.url}" userid="${db.user}" password="${db.pw}" onerror="continue">  
+		<sql driver="${hsqldb.driver}" url="${hsqldb.url}" userid="${hsqldb.user}" password="${hsqldb.pass}" 
+		     onerror="continue">  
 	    <classpath refid="master-classpath"/>
-
 	    SHUTDOWN;
-
 	  </sql> 
 	</target>	
 	<!-- End hsqldb targets -->

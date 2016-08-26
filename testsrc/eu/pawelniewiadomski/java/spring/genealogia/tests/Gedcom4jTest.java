@@ -1,14 +1,8 @@
 package eu.pawelniewiadomski.java.spring.genealogia.tests;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 import org.gedcom4j.exception.GedcomParserException;
@@ -18,15 +12,11 @@ import org.gedcom4j.model.Gedcom;
 import org.gedcom4j.model.Individual;
 import org.gedcom4j.model.IndividualEventType;
 import org.gedcom4j.parser.GedcomParser;
-import org.springframework.context.annotation.DependsOn;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-
-import sun.awt.image.ByteArrayImageSource;
 
 public class Gedcom4jTest {
 
@@ -40,6 +30,7 @@ public class Gedcom4jTest {
 
   @BeforeClass
   public void setupBeforeClass() {
+    System.out.println("*** Gedcom4jTest: setupBeforeClass ***");
     StringBuilder familyData = new StringBuilder(128);
     familyData.append("0 @F1@ FAM\n");
     familyData.append("1 CHIL @I2@\n");
@@ -143,17 +134,16 @@ public class Gedcom4jTest {
 
   @BeforeMethod
   public void setupBeforeMethod() {
-    gedcomParser = new GedcomParser();
-    System.out.println("*** Gedcom4jTest: Before method ***");
+    gedcomParser = new GedcomParser();    
   }
   
   @AfterMethod
   public void setupAfterMethod() {
-    System.out.println("^^^ Gedcom4jTest: After method ^^^");
   }
 
   @Test
   public void testFamilyParser() throws GedcomParserException, IOException {
+    System.out.println("*** Gedcom4jTest: testFamilyParser ***");
     BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(familyDataF1.getBytes("UTF-8")));
     Assert.assertNotNull(gedcomParser);
     gedcomParser.load(bis);
@@ -181,6 +171,7 @@ public class Gedcom4jTest {
 
   @Test
   public void testIndividualParser() throws IOException, GedcomParserException {
+    System.out.println("*** Gedcom4jTest: testIndividualParser ***");
     BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(personDataI2.getBytes("UTF-8")));
     Assert.assertNotNull(gedcomParser);
     gedcomParser.load(bis);
@@ -213,6 +204,7 @@ public class Gedcom4jTest {
 
   @Test(dependsOnMethods={"testIndividualParser","testFamilyParser"})
   public void testDefaultFamily() throws IOException, GedcomParserException {
+    System.out.println("*** Gedcom4jTest: testDefaultFamily ***");
     String defaultFamilyId = "@F3@";
     Assert.assertNotNull(gedcomParser);
     BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(memGedcomDb.get(defaultFamilyId).getBytes("UTF-8")));

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"   
+  xsi:schemaLocation="
+    http://www.springframework.org/schema/beans     
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    ">
+
+  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+      <list>
+        <value>jdbc.properties</value>        
+      </list>
+    </property>
+  </bean>
+  
+  <bean id="pooledDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+    <property name="driverClassName" ref="driverClassName" />
+    <property name="url" value="${db.url}" />
+    <property name="username" value="${db.username}" />
+    <property name="password" value="${db.password}" />
+    <property name="initialSize" value="${db.pool.initialSize}" />
+    <property name="maxActive" value="${db.pool.maxActive}" />
+  </bean>
+
+  <bean id="springMultiDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" ref="driverClassName" />
+    <property name="url" value="${db.url}" />
+    <property name="username" value="${db.username}" />
+    <property name="password" value="${db.password}" />
+  </bean>
+
+  <alias alias="dataSource" name="springMultiDataSource" />
+
+  <alias alias="personService" name="defaultPersonService" />
+  <bean id="defaultPersonService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultPersonService" />
+
+  <alias alias="familyService" name="defaultFamilyService" />
+  <bean id="defaultFamilyService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultFamilyService" />
+
+  <alias alias="personConverter" name="defaultPersonConverter" />
+  <bean id="defaultPersonConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.PersonConverter" />
+  
+  <alias alias="familyConverter" name="defaultFamilyConverter" />
+  <bean id="defaultFamilyConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.FamilyConverter" />
+
+</beans>

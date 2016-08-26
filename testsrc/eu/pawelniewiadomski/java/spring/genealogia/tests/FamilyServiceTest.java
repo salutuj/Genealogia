@@ -5,7 +5,7 @@ import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.Test;
 
 @Test
-@ContextConfiguration(locations = {"classpath:war/WEB-INF/genealogia-servlet.xml"})
+@ContextConfiguration(locations = {"classpath:genealogia-test-config.xml"})
 public class FamilyServiceTest extends AbstractTestNGSpringContextTests  {
 
 }

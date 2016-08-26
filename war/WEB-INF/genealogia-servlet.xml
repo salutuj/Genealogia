@@ -11,6 +11,7 @@
     http://www.springframework.org/schema/context 
     http://www.springframework.org/schema/context/spring-context.xsd">
     
+   
 	<mvc:resources mapping="/js/**" location="/js/" />
 	<mvc:resources mapping="/css/**" location="/css/" />
 	<mvc:resources mapping="/ng-views/**" location="/ng-views/" />	
@@ -19,48 +20,10 @@
 	<mvc:annotation-driven />
   <context:component-scan base-package="eu.pawelniewiadomski.java.spring.genealogia.controllers" /> 
 
-  <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+  <!-- bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
     <property name="prefix" value="/WEB-INF/jsp/"></property>
     <property name="suffix" value=".jsp"></property>
-  </bean>
-
-  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-    <property name="locations">
-      <list>
-        <value>jdbc.properties</value>        
-      </list>
-    </property>
-  </bean>
-  
-  <bean id="pooledDataSource" class="org.apache.commons.dbcp.BasicDataSource">
-    <property name="driverClassName" ref="driverClassName" />
-    <property name="url" value="${db.url}" />
-    <property name="username" value="${db.username}" />
-    <property name="password" value="${db.password}" />
-    <property name="initialSize" value="${db.pool.initialSize}" />
-    <property name="maxActive" value="${db.pool.maxActive}" />
-  </bean>
-
-  <bean id="springMultiDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-    <property name="driverClassName" ref="driverClassName" />
-    <property name="url" value="${db.url}" />
-    <property name="username" value="${db.username}" />
-    <property name="password" value="${db.password}" />
-  </bean>
-
-  <alias alias="dataSource" name="springMultiDataSource" />
-
-	<alias alias="personService" name="defaultPersonService" />
-	<bean id="defaultPersonService"	class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultPersonService" />
-
-	<alias alias="familyService" name="defaultFamilyService" />
-	<bean id="defaultFamilyService"	class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultFamilyService" />
-
-  <alias alias="personConverter" name="defaultPersonConverter" />
-  <bean id="defaultPersonConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.impl.PersonConverter" />
-  
-  <alias alias="familyConverter" name="defaultFamilyConverter" />
-  <bean id="defaultFamilyConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.impl.FamilyConverter" />
+  </bean-->
 
 </beans>

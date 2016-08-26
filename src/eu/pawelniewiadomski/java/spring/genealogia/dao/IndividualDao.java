@@ -45,10 +45,4 @@ public interface IndividualDao extends GenericDao<GedcomIndividualModel>{
 	 */
 	GedcomIndividualModel findIndividualByName(String name);
 	
-	/**
-	 * 
-	 * @param individual
-	 */
-	void saveIndividual(GedcomIndividualModel individual);
-	
 }

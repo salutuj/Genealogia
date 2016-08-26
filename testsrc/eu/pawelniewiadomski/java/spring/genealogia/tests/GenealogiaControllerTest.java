@@ -2,22 +2,24 @@ package eu.pawelniewiadomski.java.spring.genealogia.tests;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+
+import javax.annotation.Resource;
 
 import org.gedcom4j.exception.GedcomParserException;
 import org.gedcom4j.model.Family;
-import org.gedcom4j.model.Gedcom;
 import org.gedcom4j.model.Individual;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import eu.pawelniewiadomski.java.spring.genealogia.controllers.GenealogiaController;
@@ -28,6 +30,18 @@ import eu.pawelniewiadomski.java.spring.genealogia.services.FamilyService;
 import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
 import eu.pawelniewiadomski.java.spring.genealogia.utils.GedcomDateConverter;
 
+
+
+/*
+ * @ContextHierarchy({
+ 
+  @ContextConfiguration("classpath*:/resources/genealogia-app.xml"),
+  @ContextConfiguration("file:war/WEB-INF/genealogia-servlet.xml")
+})
+
+*/
+@WebAppConfiguration
+@ContextConfiguration(locations = {"classpath:genealogia-test-config.xml"})
 public class GenealogiaControllerTest extends BaseTest{
 
   @Mock
@@ -36,27 +50,32 @@ public class GenealogiaControllerTest extends BaseTest{
   @Mock
   private PersonService personService;
 
-  
+  @Mock
   private AbstractConverter<FamilyModel, String> familyConverter;
 
+  @Autowired  
+  private AbstractConverter<FamilyModel, String> realFamilyConverter;
   
-  private AbstractConverter<PersonModel, String> personConverter;
+  @Autowired
+  private AbstractConverter<PersonModel, String> realPersonConverter;
   
   @InjectMocks
-  private GenealogiaController testSubject;
+  private GenealogiaController genealogiaController;
  
   @Override  
   @BeforeClass
   public void initMocks(){
-    testSubject = new GenealogiaController();
     MockitoAnnotations.initMocks(this);
   }
   
   @Override
   @BeforeClass(dependsOnMethods={"initMocks"})
-  public void setupClass(@Optional("resources/niewiadomski-sample.ged")  String sampleFile) throws IOException, GedcomParserException{
+  @Parameters("sampleGedcomFile")
+  public void setupClass(@Optional("/gedcom/niewiadomski-sample.ged")  String sampleFile) throws IOException, GedcomParserException{
     super.setupClass(sampleFile);
-    Family defaultGedcomFamily = gedcomParser.getGedcom().getFamilies().get(0);
+    System.out.println("*** GenealogiaControllerTest.setupClass ***");
+    Family defaultGedcomFamily = gedcomParser.getGedcom().getFamilies().get("@F3@");
+    Assert.assertNotNull(defaultGedcomFamily, "defaultGedcomFamily is null");
     PersonModel father = new PersonModel();
     father.setId(defaultGedcomFamily.getHusband().getXref());
     father.setFirstName(defaultGedcomFamily.getHusband().getNames().get(0).getGivenName().getValue().split(" ")[0]);
@@ -88,6 +107,7 @@ public class GenealogiaControllerTest extends BaseTest{
     children.add(child);
     defaultFamilyModel.setChildren(children);    
     Mockito.when(familyService.getDefaultFamily()).thenReturn(defaultFamilyModel);
+    Mockito.when(familyConverter.convert(defaultFamilyModel)).thenReturn(realFamilyConverter.convert(defaultFamilyModel));
   }
   
   
@@ -101,9 +121,13 @@ public class GenealogiaControllerTest extends BaseTest{
   
   
   @Test
-  public void testDefautFamily(){
-    String jsonDesiredResponse = "[json]";
-    String defaultFamily = testSubject.getDefaultFamily();
+  public void testADefautFamily(){
+    String jsonDesiredResponse = "{\"mother\": {\"firstName\": \"Magdalena\",\"lastName\": \"Zelewska\"," +
+      "\"placeOfBirth\": \"Oświęcim\",\"personId\": \"@I6@\",\"dateOfBirth\": \"Wed Oct 24 00:00:00 CET 1906\"," +
+      "\"age\": 0},\"father\": {\"firstName\": \"Paweł\",\"lastName\": \"Niewiadomski\"," +
+      "\"placeOfBirth\": \"Katowice\",\"personId\": \"@I2@\",\"dateOfBirth\": \"Sun Dec 22 00:00:00 CET 1907\"," +
+      "\"age\": 0},\"name\": \"Niewiadomscy\",\"id\": \"@F3@\"}";
+    String defaultFamily = genealogiaController.getDefaultFamily();
     Assert.assertTrue(defaultFamily.equals(jsonDesiredResponse));
   }
   
