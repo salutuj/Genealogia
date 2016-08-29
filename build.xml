@@ -14,6 +14,10 @@
 	<property name="java.src.version" value="1.8"/>
 	<property name="java.tgt.version" value="1.8"/>
 	
+	<path id="hsqldb-classpath">
+	  <pathelement path="hsqldb/hsqldb.jar"/>
+	</path>
+	
   <path id="master-classpath">
     <fileset dir="${web.dir}/WEB-INF/lib">
       <include name="*.jar"/>
@@ -125,6 +129,7 @@
 		<testng mode="testng" classpathref="test-classpath" 
 			      failureproperty="tests.failed" verbose="1">
 			<classfileset dir="${build.classes.dir}" includes="**/*Test.class"/>
+			<jvmarg value="-Dfile.encoding=UTF-8"/>
 		</testng>
 	  <fail if="tests.failed">
 	            tests.failed=${tests.failed}
@@ -144,6 +149,7 @@
 	    	<jvmarg value="-Xdebug"/>
 	    	<jvmarg value="-Xnoagent"/> 
 	    	<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8990" />
+	    	<jvmarg value="-Dfile.encoding=UTF-8"/>
 	    </testng>
 	  </target>
     
@@ -289,15 +295,25 @@
 	<!-- ============================================================== -->
 	  
   <!-- Begin hsqldb targets -->
-	<target name="hsqldb-start">
-	    <echo message="START HSQLDB"/>	    
+	<target name="hsqldb-start-bat">
+	  <echo message="START HSQLDB"/>	  
+		<exec executable="cmd">
+			<arg value="/c hsqldb\hsql_server.bat -p"/>
+	  </exec>
+	</target>
+	
+	<target name="hsqldb-start-java">
+	  <echo message="START HSQLDB"/>    
+		<java classname="org.hsqldb.Server" fork="true" classpathref="hsqldb-classpath">		  
+		  <arg line="-database genealogia"/>
+		</java>		
 	</target>
 	
 	<target name="hsqldb-create-tables">
 	  <echo message="CREATE TABLES USING: ${hsqldb.driver} ${hsqldb.url}"/>
 	  <sql driver="${hsqldb.driver}" url="${hsqldb.url}" userid="${hsqldb.user}" password="${hsqldb.pass}"
 	       src="hsqldb/genealogia-create.sql" onerror="continue" >  
-	    <classpath refid="master-classpath"/>
+	    <classpath refid="hsqldb-classpath"/>
 	  </sql> 
 	</target>
 
@@ -305,16 +321,18 @@
 	  <echo message="DROP TABLES USING: ${hsqldb.driver} ${hsqldb.url}"/>
 	  <sql driver="${hsqldb.driver}" url="${hsqldb.url}" userid="${hsqldb.user}" password="${hsqldb.pass}" 
 	  	src="hsqldb/genealogia-drop.sql" onerror="continue">  
-      <classpath refid="master-classpath"/>
+      <classpath refid="hsqldb-classpath"/>
 	  </sql> 
   </target>
 	    
 	<target name="hsqldb-shutdown">
-	  <echo message="SHUT DOWN DATABASE USING: ${db.driver} ${db.url}"/>
+	  <echo message="SHUT DOWN DATABASE USING: ${hsqldb.driver} ${hsqldb.url} ${hsqldb.user}"/>
 		<sql driver="${hsqldb.driver}" url="${hsqldb.url}" userid="${hsqldb.user}" password="${hsqldb.pass}" 
 		     onerror="continue">  
-	    <classpath refid="master-classpath"/>
+	    <classpath refid="hsqldb-classpath"/>
+			
 	    SHUTDOWN;
+			
 	  </sql> 
 	</target>	
 	<!-- End hsqldb targets -->

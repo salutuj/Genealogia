@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -31,17 +32,10 @@ import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
 import eu.pawelniewiadomski.java.spring.genealogia.utils.GedcomDateConverter;
 
 
-
-/*
- * @ContextHierarchy({
- 
-  @ContextConfiguration("classpath*:/resources/genealogia-app.xml"),
-  @ContextConfiguration("file:war/WEB-INF/genealogia-servlet.xml")
-})
-
-*/
 @WebAppConfiguration
-@ContextConfiguration(locations = {"classpath:genealogia-test-config.xml"})
+@ContextHierarchy({
+  @ContextConfiguration(locations = {"classpath:genealogia-test-config.xml"})
+})
 public class GenealogiaControllerTest extends BaseTest{
 
   @Mock
