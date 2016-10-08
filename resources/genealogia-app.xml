@@ -1,36 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://www.springframework.org/schema/beans"   
+  xmlns="http://www.springframework.org/schema/beans" 
+  xmlns:context="http://www.springframework.org/schema/context" 
+  xmlns:jdbc="http://www.springframework.org/schema/jdbc"  
   xsi:schemaLocation="
     http://www.springframework.org/schema/beans     
     http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context.xsd
+    http://www.springframework.org/schema/jdbc
+    http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
     ">
 
-  <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-    <property name="locations">
-      <list>
-        <value>jdbc.properties</value>        
-      </list>
-    </property>
-  </bean>
+  <context:property-placeholder location="classpath:hsqldb.properties"/>
   
-  <bean id="pooledDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+  <!-- use Tomcat JNDI -->
+  <!-- bean id="DatabaseName" class="org.springframework.jndi.JndiObjectFactoryBean">
+    <property name="jndiName" value="java:comp/env/jdbc/DatabaseName"/>
+  </bean-->
+
+  <!-- use DBCP JNDI -->
+  <!-- bean id="pooledDataSource" class="org.apache.commons.dbcp.BasicDataSource">
     <property name="driverClassName" ref="driverClassName" />
     <property name="url" value="${db.url}" />
     <property name="username" value="${db.username}" />
     <property name="password" value="${db.password}" />
     <property name="initialSize" value="${db.pool.initialSize}" />
     <property name="maxActive" value="${db.pool.maxActive}" />
-  </bean>
+  </bean -->
+  
+  <!--  use c3p0 JNDI -->
+  <!-- bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+    <property name="driverClass" value="oracle.jdbc.driver.OracleDriver" />
+    <property name="jdbcUrl" value="jdbc:oracle:thin:@//databasehost:1527/servicename" />
+    <property name="user" ref="database.user" />
+    <property name="password" ref="database.password" />
+  </bean -->
 
-  <bean id="springMultiDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-    <property name="driverClassName" ref="driverClassName" />
+ <!-- use HikariCP -->
+  <!-- bean id=""></bean-->
+
+  <bean id="mariadbDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="org.mariadb.jdbc.MySQLDataSource" />
     <property name="url" value="${db.url}" />
     <property name="username" value="${db.username}" />
     <property name="password" value="${db.password}" />
   </bean>
-
-  <alias alias="dataSource" name="springMultiDataSource" />
+  
+  <bean id="hsqldbDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+    <property name="url" value="${db.url}" />
+    <property name="username" value="${db.username}" />
+    <property name="password" value="${db.password}" />
+  </bean>
+  
+  <alias alias="dataSource" name="hsqldbDataSource" />
 
   <alias alias="personService" name="defaultPersonService" />
   <bean id="defaultPersonService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultPersonService" />
@@ -42,6 +66,8 @@
   <bean id="defaultPersonConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.PersonConverter" />
   
   <alias alias="familyConverter" name="defaultFamilyConverter" />
-  <bean id="defaultFamilyConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.FamilyConverter" />
+  <bean id="defaultFamilyConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.FamilyConverter">
+  <property name="personConverter" ref="personConverter"/>
+  </bean>
 
 </beans>

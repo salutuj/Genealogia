@@ -3,13 +3,26 @@ package eu.pawelniewiadomski.java.spring.genealogia.services.impl;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.gedcom4j.exception.GedcomParserException;
+
+import eu.pawelniewiadomski.java.spring.genealogia.dao.FamilyDao;
+import eu.pawelniewiadomski.java.spring.genealogia.dao.IndividualDao;
 import eu.pawelniewiadomski.java.spring.genealogia.model.FamilyModel;
 import eu.pawelniewiadomski.java.spring.genealogia.model.PersonModel;
+import eu.pawelniewiadomski.java.spring.genealogia.model.gedcom.GedcomFamilyModel;
+import eu.pawelniewiadomski.java.spring.genealogia.model.gedcom.GedcomIndividualModel;
 import eu.pawelniewiadomski.java.spring.genealogia.services.FamilyService;
+import eu.pawelniewiadomski.java.spring.genealogia.services.utils.FamilyUtils;
+import eu.pawelniewiadomski.java.spring.genealogia.services.utils.IndividualUtils;
 
 public class DefaultFamilyService implements FamilyService{
 
+  private FamilyDao familyDao;
+  private IndividualDao individualDao;
+  
 	@Override
 	public FamilyModel findFamilyById(String id) {
 		// TODO Auto-generated method stub
@@ -23,28 +36,24 @@ public class DefaultFamilyService implements FamilyService{
 	}
 
 	@Override
-	public FamilyModel getDefaultFamily() {
-    FamilyModel defaultFamily = new FamilyModel();
-    defaultFamily.setId("1");
-    defaultFamily.setFamilyName("Niewiadomscy");
-    PersonModel father = new PersonModel();
-    father.setId("1");
-    father.setFirstName("Paweł");
-    father.setLastName("Niewiadomski");
-    father.setAge(33);
-    father.setDateOfBirth(new Date(83,9,7));
-    father.setPlaceOfBirth("Katowice");
+	public FamilyModel getDefaultFamily() {	  	  
+    GedcomFamilyModel defaultGedcomFamily = familyDao.findFamilyById("1");
+    if ( defaultGedcomFamily == null)
+      throw new NullPointerException("family is null");
+    GedcomIndividualModel gedcomFather = individualDao.findIndividualById(defaultGedcomFamily.getHusbandId());
+    if ( gedcomFather == null)
+      throw new NullPointerException("father individual is null");
+    GedcomIndividualModel gedcomMother = individualDao.findIndividualById(defaultGedcomFamily.getWifeId());
+    if ( gedcomMother == null)
+      throw new NullPointerException("mother individual is null");        
+    FamilyModel defaultFamily = FamilyUtils.convertFromGedcom(defaultGedcomFamily);
+    defaultFamily.setFamilyName("Niewiadomscy");    
+    PersonModel father = IndividualUtils.convertFromGedcom(gedcomFather);    
+    defaultFamily.setFather(father);    
+    PersonModel mother = IndividualUtils.convertFromGedcom(gedcomFather);    
     defaultFamily.setFather(father);
-    PersonModel mother = new PersonModel();
-    mother.setId("2");
-    mother.setFirstName("Magdalena");
-    mother.setMaidenName("Niewiadomska");
-    mother.setLastName("Niewiadomska");
-    mother.setAge(31);
-    mother.setDateOfBirth(new Date(85,7,6));
-    mother.setPlaceOfBirth("Oświęcim");
     defaultFamily.setMother(mother);
-    PersonModel child1 = new PersonModel();
+    /*PersonModel child1 = new PersonModel();
     child1.setId("3");
     child1.setFirstName("Maria");
     child1.setMiddleName("Niewiadomska");
@@ -55,8 +64,9 @@ public class DefaultFamilyService implements FamilyService{
     child1.setPlaceOfBirth("Katowice");
     Collection<PersonModel> children = new ArrayList<PersonModel>();
     children.add(child1);
-    defaultFamily.setChildren(children);
+    defaultFamily.setChildren(children);*/
 		return defaultFamily;
 	}
 
+	
 }

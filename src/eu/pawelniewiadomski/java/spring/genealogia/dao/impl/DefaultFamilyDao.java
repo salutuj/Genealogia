@@ -1,13 +1,27 @@
 package eu.pawelniewiadomski.java.spring.genealogia.dao.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
+
 import eu.pawelniewiadomski.java.spring.genealogia.dao.FamilyDao;
 import eu.pawelniewiadomski.java.spring.genealogia.model.FamilyModel;
+import eu.pawelniewiadomski.java.spring.genealogia.model.gedcom.GedcomFamilyModel;
+import eu.pawelniewiadomski.java.spring.genealogia.model.gedcom.GedcomIndividualModel;
 
-public class DefaultFamilyDao implements FamilyDao{
+public class DefaultFamilyDao extends NamedParameterJdbcDaoSupport implements FamilyDao{
 
+  
+  private static final String FAMILY_QUERY = "" +
+      "SELECT i_id, i_sex, i_gedcom " +
+      "FROM wt_individuals " +
+      "WHERE i_id=?";
+  
   /*
    * pawel
    * @see eu.pawelniewiadomski.java.spring.genealogia.dao.GenericDao#find()
@@ -33,5 +47,23 @@ public class DefaultFamilyDao implements FamilyDao{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
+	public GedcomFamilyModel findFamilyById(final String id) {
+	   List<?> families = getJdbcTemplate().query(FAMILY_QUERY, new Object[] {
+        id },
+        new RowMapper<GedcomFamilyModel>() {
+          @Override
+          public GedcomFamilyModel mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+            GedcomFamilyModel family = new GedcomFamilyModel();
+            family.setId((rs.getString(1)));
+            family.setFile(Integer.valueOf(rs.getInt(2)));
+            family.setHusbandId(rs.getString(3));
+            family.setWifeId(rs.getString(4));
+            family.setGedcom(rs.getString(5));
+            family.setNumberOfChildren(rs.getInt(6));
+            return family;
+          }
+        });
+    return (GedcomFamilyModel) (families.size() > 0 ? families.get(0) : null); 
+	}
 }
