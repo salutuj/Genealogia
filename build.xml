@@ -14,10 +14,6 @@
 	<property name="java.src.version" value="1.8"/>
 	<property name="java.tgt.version" value="1.8"/>
 	
-	<path id="hsqldb-classpath">
-	  <pathelement path="hsqldb/hsqldb.jar"/>
-	</path>
-	
   <path id="master-classpath">
     <fileset dir="${web.dir}/WEB-INF/lib">
       <include name="*.jar"/>
@@ -44,6 +40,14 @@
 	    <pathelement path="${build.classes.dir}"/>
 	</path>
 	
+  <path id="catalina-ant-classpath">
+    <!-- We need the Catalina jars for Tomcat; * for other app servers - check the docs -->
+    <fileset dir="${tomcat.lib.dir}">
+      <include name="catalina-ant.jar"/>
+      <include name="tomcat-util.jar"/>     
+    </fileset>
+  </path>
+    	
 	<!-- *** taskdefs *** -->
 	<taskdef name="testng" classpathref="test-classpath" classname="org.testng.TestNGAntTask" />
 	
@@ -102,7 +106,12 @@
       <fileset dir="${resources.dir}">
     	  <include name="**/*.*"/>
       </fileset>
-    </copy>
+    </copy>  	
+  	<copy todir="${build.lib.dir}" preservelastmodified="true">
+  	  <fileset dir="hsqldb">
+  	    <include name="**/*.jar"/>
+  	  </fileset>
+  	</copy>
   </target>
 	
 	<target name="rebuild" depends="clean,build" description="Clean and build"/>
@@ -162,26 +171,32 @@
   </target>
 
   <target name="deploy-war" depends="build" description="Deploy application as a WAR file">
-    <war destfile="${name}.war" webxml="${web.dir}/WEB-INF/web.xml">
+  	<mkdir dir="output"/>
+  	<delete>
+  	  <fileset dir="output">
+  	    <include name="**/*.*"/>
+  	  </fileset>
+  	</delete>
+    <war destfile="output/${name}.war" webxml="${web.dir}/WEB-INF/web.xml">
       <fileset dir="${web.dir}">
         <include name="**/*.*"/>
       </fileset>
     </war>
-    <move todir="${tomcat.deploy.dir}" preservelastmodified="true">
-      <fileset dir=".">
+    <copy todir="${tomcat.deploy.dir}" preservelastmodified="true">
+      <fileset dir="output">
         <include name="*.war"/>
       </fileset>
-    </move>
+    </copy>
   </target>
     
-	<target name="undeploy" description="Un-Deploy application">
-	  <delete>
+	<target name="undeploy" description="Un-Deploy application">		
+	  <delete>	  
 	    <fileset dir="${tomcat.deploy.dir}/${name}">
 	      <include name="**/*.*"/>
-	    </fileset>
+	    </fileset>	 
 	  	<fileset dir="${tomcat.deploy.dir}">
 	      <include name="${name}.war"/>
-	  	</fileset>
+	  	</fileset>	  		  	
 	  </delete>
 	</target>
 	
@@ -189,15 +204,7 @@
   <!-- Tomcat tasks - remove these if you don't have Tomcat installed -->
   <!-- ============================================================== -->
 	
-  <path id="catalina-ant-classpath">
-    <!-- We need the Catalina jars for Tomcat; * for other app servers - check the docs -->
-    <fileset dir="${tomcat.lib.dir}">
-      <include name="catalina-ant.jar"/>
-      <include name="tomcat-util.jar"/>    	
-    </fileset>
-  </path>
-
-  <taskdef name="tomcat-deploy" classname="org.apache.catalina.ant.DeployTask">
+  <taskdef name="deploy" classname="org.apache.catalina.ant.DeployTask">
     <classpath refid="catalina-ant-classpath"/>
   </taskdef>
   <taskdef name="tomcat-reload" classname="org.apache.catalina.ant.ReloadTask">
@@ -214,27 +221,27 @@
   </taskdef>
   
 	<target name="tomcat-deploy" description="Deploy application in Tomcat 8">
-    <deploy url="${tomcat.manager.url}" username="${tomcat.manager.username}"
-            password="${tomcat.manager.password}" path="/${name}" war="${name}.war"/>
+    <deploy url="${tomcat.manager.url}" username="${tomcat.manager.username}" 
+    	password="${tomcat.manager.password}" path="/${name}" war="output/${name}.war"/>
   </target>
   
 	<target name="tomcat-reload" description="Reload application in Tomcat">
-    <reload url="${tomcat.manager.url}" username="${tomcat.manager.username}"
+    <tomcat-reload url="${tomcat.manager.url}" username="${tomcat.manager.username}"
             password="${tomcat.manager.password}" path="/${name}"/>
   </target>
   
 	<target name="tomcat-start" description="Start app on Tomcat server">
-    <start url="${tomcat.manager.url}" username="${tomcat.manager.username}"
+    <tomcat-start url="${tomcat.manager.url}" username="${tomcat.manager.username}"
            password="${tomcat.manager.password}" path="/${name}" />
   </target>
   
 	<target name="tomcat-stop" description="Stop app on Tomcat server">
-    <stop url="${tomcat.manager.url}" username="${tomcat.manager.username}"
+    <tomcat-stop url="${tomcat.manager.url}" username="${tomcat.manager.username}"
           password="${tomcat.manager.password}" path="/${name}"/>
   </target>
 
   <target name="tomcat-list" description="List Tomcat applications">
-    <list url="${tomcat.manager.url}" username="${tomcat.manager.username}" 
+    <tomcat-list url="${tomcat.manager.url}" username="${tomcat.manager.username}" 
     	    password="${tomcat.manager.password}"/>
   </target>
 
@@ -289,51 +296,5 @@
 	  </condition>
 	</target-->
 <!-- End Tomcat tasks -->
-
-	<!-- ============================================================== -->
-	<!-- HSQLDB tasks - remove these if you don't have Tomcat installed -->
-	<!-- ============================================================== -->
-	  
-  <!-- Begin hsqldb targets -->
-	<target name="hsqldb-start-bat">
-	  <echo message="START HSQLDB"/>	  
-		<exec executable="cmd">
-			<arg value="/c hsqldb\hsql_server.bat -p"/>
-	  </exec>
-	</target>
-	
-	<target name="hsqldb-start-java">
-	  <echo message="START HSQLDB"/>    
-		<java classname="org.hsqldb.Server" fork="true" classpathref="hsqldb-classpath">		  
-		  <arg line="-database genealogia"/>
-		</java>		
-	</target>
-	
-	<target name="hsqldb-create-tables">
-	  <echo message="CREATE TABLES USING: ${hsqldb.driver} ${hsqldb.url}"/>
-	  <sql driver="${hsqldb.driver}" url="${hsqldb.url}" userid="${hsqldb.user}" password="${hsqldb.pass}"
-	       src="hsqldb/genealogia-create.sql" onerror="continue" >  
-	    <classpath refid="hsqldb-classpath"/>
-	  </sql> 
-	</target>
-
-	<target name="hsqldb-drop-tables">
-	  <echo message="DROP TABLES USING: ${hsqldb.driver} ${hsqldb.url}"/>
-	  <sql driver="${hsqldb.driver}" url="${hsqldb.url}" userid="${hsqldb.user}" password="${hsqldb.pass}" 
-	  	src="hsqldb/genealogia-drop.sql" onerror="continue">  
-      <classpath refid="hsqldb-classpath"/>
-	  </sql> 
-  </target>
-	    
-	<target name="hsqldb-shutdown">
-	  <echo message="SHUT DOWN DATABASE USING: ${hsqldb.driver} ${hsqldb.url} ${hsqldb.user}"/>
-		<sql driver="${hsqldb.driver}" url="${hsqldb.url}" userid="${hsqldb.user}" password="${hsqldb.pass}" 
-		     onerror="continue">  
-	    <classpath refid="hsqldb-classpath"/>
-			
-	    SHUTDOWN;
-			
-	  </sql> 
-	</target>	
-	<!-- End hsqldb targets -->
 </project>
+
