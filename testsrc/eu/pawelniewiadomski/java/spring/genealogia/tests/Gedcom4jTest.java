@@ -30,7 +30,7 @@ public class Gedcom4jTest {
 
   @BeforeClass
   public void setupBeforeClass() {
-    System.out.println("*** Gedcom4jTest: setupBeforeClass ***");
+    System.out.println("*** Gedcom4jTest.setupBeforeClass ***");
     StringBuilder familyData = new StringBuilder(128);
     familyData.append("0 @F1@ FAM\n");
     familyData.append("1 CHIL @I2@\n");
@@ -143,7 +143,7 @@ public class Gedcom4jTest {
 
   @Test
   public void testFamilyParser() throws GedcomParserException, IOException {
-    System.out.println("*** Gedcom4jTest: testFamilyParser ***");
+    System.out.println("*** Gedcom4jTest.testFamilyParser ***");
     BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(familyDataF1.getBytes("UTF-8")));
     Assert.assertNotNull(gedcomParser);
     gedcomParser.load(bis);

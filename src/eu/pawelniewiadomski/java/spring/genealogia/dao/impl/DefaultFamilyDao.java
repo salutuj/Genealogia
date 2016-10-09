@@ -48,7 +48,8 @@ public class DefaultFamilyDao extends NamedParameterJdbcDaoSupport implements Fa
 		return null;
 	}
 	
-	public GedcomFamilyModel findFamilyById(final String id) {
+	@Override
+  public GedcomFamilyModel findFamilyById(final String id) {
 	   List<?> families = getJdbcTemplate().query(FAMILY_QUERY, new Object[] {
         id },
         new RowMapper<GedcomFamilyModel>() {

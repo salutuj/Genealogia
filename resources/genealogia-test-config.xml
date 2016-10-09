@@ -14,8 +14,8 @@
   </jdbc:embedded-database-->
   
   <alias alias="personConverter" name="defaultPersonConverter" />
-  <bean id="defaultPersonConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.PersonConverter" />
+  <bean id="defaultPersonConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.JsonPersonConverter" />
   
   <alias alias="familyConverter" name="defaultFamilyConverter" />
-  <bean id="defaultFamilyConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.FamilyConverter" />  
+  <bean id="defaultFamilyConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.JsonFamilyConverter" />  
 </beans>

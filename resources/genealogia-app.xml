@@ -60,7 +60,10 @@
   <bean id="defaultPersonService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultPersonService" />
 
   <alias alias="familyService" name="defaultFamilyService" />
-  <bean id="defaultFamilyService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultFamilyService" />
+  <bean id="defaultFamilyService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultFamilyService">
+    <property name="personService" ref="personService"/>
+  </bean>
+  
 
   <alias alias="personConverter" name="defaultPersonConverter" />
   <bean id="defaultPersonConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.PersonConverter" />
