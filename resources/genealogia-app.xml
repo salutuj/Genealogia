@@ -7,12 +7,9 @@
     http://www.springframework.org/schema/beans     
     http://www.springframework.org/schema/beans/spring-beans.xsd
     http://www.springframework.org/schema/context 
-    http://www.springframework.org/schema/context/spring-context.xsd
-    http://www.springframework.org/schema/jdbc
-    http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-    ">
-
-  <context:property-placeholder location="classpath:hsqldb.properties"/>
+    http://www.springframework.org/schema/context/spring-context.xsd    
+    "> 
+  <context:property-placeholder location="classpath:config.properties"/>
   
   <!-- use Tomcat JNDI -->
   <!-- bean id="DatabaseName" class="org.springframework.jndi.JndiObjectFactoryBean">
@@ -40,36 +37,63 @@
  <!-- use HikariCP -->
   <!-- bean id=""></bean-->
 
+<!-- <bean id="hsqldbDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+    <property name="url" value="${db.hsqldb.url}" />
+    <property name="username" value="${db.hsqldb.username}" />
+    <property name="password" value="${db.hsqldb.password}" />
+  </bean>
+   -->
   <bean id="mariadbDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     <property name="driverClassName" value="org.mariadb.jdbc.MySQLDataSource" />
-    <property name="url" value="${db.url}" />
-    <property name="username" value="${db.username}" />
-    <property name="password" value="${db.password}" />
+    <property name="url" value="${db.maria.url}" />
+    <property name="username" value="${db.maria.username}" />
+    <property name="password" value="${db.maria.password}" />
   </bean>
   
-  <bean id="hsqldbDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-    <property name="driverClassName" value="org.hsqldb.jdbcDriver" />
-    <property name="url" value="${db.url}" />
-    <property name="username" value="${db.username}" />
-    <property name="password" value="${db.password}" />
-  </bean>
+  <import resource="genealogia-embeddedHsqldb.xml"/>
   
-  <alias alias="dataSource" name="hsqldbDataSource" />
+  
+  <bean id="dataSourceLookupKey" class="java.lang.String">
+    <constructor-arg value="${config.mode}"/>
+  </bean>  
+  <bean id="multiDataSource" class="org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource">
+    <lookup-method name="determineCurrentLookupKey" bean="dataSourceLookupKey"/>
+    <property name="targetDataSources">
+      <map key-type="java.lang.String">
+        <entry key="DEV" value-ref="embeddedHsqldbDataSource"/>
+        <entry key="PROD" value-ref="mariadbDataSource"/>
+      </map>
+    </property>
+    <property name="defaultTargetDataSource" ref="embeddedHsqldbDataSource"/>
+  </bean>  
+  <alias alias="dataSource" name="multiDataSource" />
 
+  <alias alias="individualDao" name="defaultIndividualDao" />
+  <bean id="defaultIndividualDao" class="eu.pawelniewiadomski.java.spring.genealogia.dao.impl.DefaultIndividualDao">
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+  
+  <alias alias="familyDao" name="defaultFamilyDao" />
+  <bean id="defaultFamilyDao" class="eu.pawelniewiadomski.java.spring.genealogia.dao.impl.DefaultFamilyDao" >
+    <property name="dataSource" ref="dataSource"/>
+  </bean>
+  
   <alias alias="personService" name="defaultPersonService" />
   <bean id="defaultPersonService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultPersonService" />
 
   <alias alias="familyService" name="defaultFamilyService" />
   <bean id="defaultFamilyService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultFamilyService">
     <property name="personService" ref="personService"/>
+    <property name="familyDao" ref="familyDao"/>
   </bean>
   
 
   <alias alias="personConverter" name="defaultPersonConverter" />
-  <bean id="defaultPersonConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.PersonConverter" />
+  <bean id="defaultPersonConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.JsonPersonConverter" />
   
   <alias alias="familyConverter" name="defaultFamilyConverter" />
-  <bean id="defaultFamilyConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.FamilyConverter">
+  <bean id="defaultFamilyConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.JsonFamilyConverter">
   <property name="personConverter" ref="personConverter"/>
   </bean>
 

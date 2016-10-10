@@ -50,7 +50,7 @@ public class DefaultFamilyServiceTest extends BaseTest  {
     defaultGedcomFamily.setWifeId("I6");
     defaultGedcomFamily.setGedcom("0 @F3@ FAM\n1 WIFE @I6@\n1 HUSB @I2@\n1 MARR\n2 DATE 15 AUG 2012\n2 PLAC Kęty\n1 CHAN\n2 DATE 25 JAN 2015\n3 TIME 00:02:42\n2 _WT_USER pawel\n1 CHIL @I181@");
     defaultGedcomFamily.setNumberOfChildren(1);    
-    Mockito.when(familyDao.findFamilyById("1")).thenReturn(defaultGedcomFamily);    
+    Mockito.when(familyDao.findFamilyById("F1")).thenReturn(defaultGedcomFamily);    
     PersonModel father = new PersonModel();
     father.setId("I2");
     father.setFirstName("Paweł");

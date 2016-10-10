@@ -61,7 +61,7 @@
   	<echo message="rebuild       --> Clean and build the application"/>
   	<echo message="tests-build   --> Build tests"/>
   	<echo message="tests-run     --> Run tests with ant"/>
-  	<echo message="deploy-dir    --> Deploy application in directory"/>
+  	<!-- echo message="deploy-dir  Deploy application in directory"/-->
   	<echo message="deploy-war    --> Deploy application as a WAR file"/>
   	<echo message="undeploy      --> Undeploy application from Tomcat"/>
   	<echo message=" * Tomcat built-in targets * "/>
@@ -71,22 +71,20 @@
     <echo message="tomcat-stop   --> Stop Tomcat server"/>
     <echo message="tomcat-list   --> List Tomcat applications"/>
   	<echo message=" * Other targets * "/>
-  	<echo message="tomcat-debug  --> Start Tomcat server in debug mode"/>
-  	<echo message=" * HSQLDB targets * "/>
-  	<echo message="hsqldb-start         --> start hsqldb"/>
-  	<echo message="hsqldb-create-tables --> create tables"/>
-  	<echo message="hsqldb-drop-tables   --> drop tables"/>
-  	<echo message="hsqldb-shutdown      --> shut db down"/>
+  	<echo message="tomcat-debug  --> Start Tomcat server in debug mode"/>  	
   </target>
 
   <target name="clean" description="Clean output directories">
-    <delete>
+    <delete >
+      <fileset dir="${build.classes.dir}/hsqldb"  >
+        <include name="**/*"/>
+      </fileset>
       <fileset dir="${build.classes.dir}">
         <include name="**/*"/>
       </fileset>
       <fileset dir="${build.lib.dir}">
         <include name="**/*"/>
-      </fileset>
+      </fileset>      
     </delete>
   </target>
       	
@@ -112,6 +110,12 @@
   	    <include name="**/*.jar"/>
   	  </fileset>
   	</copy>
+  	<mkdir dir="${build.classes.dir}/hsqldb"/>
+  	<copy todir="${build.classes.dir}/hsqldb" preservelastmodified="true">
+      <fileset dir="hsqldb">
+        <include name="**/*.sql"/>
+      </fileset>
+    </copy>
   </target>
 	
 	<target name="rebuild" depends="clean,build" description="Clean and build"/>
@@ -162,13 +166,13 @@
 	    </testng>
 	  </target>
     
-	<target name="deploy-dir" depends="build" description="Deploy application">
+	<!-- target name="deploy-dir" depends="build" description="Deploy application">
     <copy todir="${tomcat.deploy.dir}/${name}" preservelastmodified="true">
       <fileset dir="${web.dir}">
         <include name="**/*.*"/>
       </fileset>
     </copy>
-  </target>
+  </target-->
 
   <target name="deploy-war" depends="build" description="Deploy application as a WAR file">
   	<mkdir dir="output"/>
