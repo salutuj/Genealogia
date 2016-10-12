@@ -66,7 +66,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/mockito-all-1.10.19-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="hsqldb/hsqldb.jar" sourcepath="C:/PROJ/train/mvctutorial/spring-Genealogia/docs/hsqldb-2.3.4-src.jar"/>
 	<classpathentry kind="lib" path="lib/mariadb-java-client-1.5.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

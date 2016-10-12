@@ -1,1 +1,2 @@
-DROP TABLE products
+DROP TABLE wt_families;
+DROP TABLE wt_individuals;
