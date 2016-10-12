@@ -22,6 +22,7 @@ import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
  */
 
 @Controller(value="genealogiaController")
+@RequestMapping(produces = "application/json; charset=UTF-8")
 public class GenealogiaController {
 
   protected static final Log LOG = LogFactory.getLog(GenealogiaController.class);

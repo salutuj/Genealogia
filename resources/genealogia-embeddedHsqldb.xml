@@ -9,7 +9,7 @@
     http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
     ">
   <jdbc:embedded-database id="embeddedHsqldbDataSource" type="HSQL" database-name="genealogia">
-    <jdbc:script location="classpath:hsqldb/genealogia-create.sql"/>
-    <jdbc:script location="classpath:hsqldb/genealogia-sampledata.sql"/>
+    <jdbc:script location="classpath:hsqldb/genealogia-create.sql" encoding="UTF-8"/>
+    <jdbc:script location="classpath:hsqldb/genealogia-sampledata.sql" encoding="UTF-8"/>
   </jdbc:embedded-database>
 </beans>

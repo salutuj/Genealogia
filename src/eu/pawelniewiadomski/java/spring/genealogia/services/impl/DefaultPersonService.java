@@ -18,8 +18,8 @@ import eu.pawelniewiadomski.java.spring.genealogia.dao.IndividualDao;
 import eu.pawelniewiadomski.java.spring.genealogia.model.PersonModel;
 import eu.pawelniewiadomski.java.spring.genealogia.model.gedcom.GedcomIndividualModel;
 import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
-import eu.pawelniewiadomski.java.spring.genealogia.utils.GedcomDateConverter;
-import eu.pawelniewiadomski.java.spring.genealogia.utils.GedcomIdXrefConverter;
+import eu.pawelniewiadomski.java.spring.genealogia.utils.GedcomUtils;
+
 
 public class DefaultPersonService implements PersonService{
 
@@ -54,7 +54,7 @@ public class DefaultPersonService implements PersonService{
     personModel.setId(gedcomIndividual.getId());
     GedcomParser parser = new GedcomParser();
     try {
-      byte [] gedcomAsBytes = gedcomIndividual.getGedcom().replaceAll("\\\\n", "\n").getBytes("UTF-8");
+      byte [] gedcomAsBytes = GedcomUtils.convertGedcomNonBOMUtf8ToByteArray(gedcomIndividual.getGedcom());
       parser.load(new BufferedInputStream(new ByteArrayInputStream(gedcomAsBytes)));
     } catch ( GedcomParserException e) {
       LOG.error("Incorrect syntax in gedcom string", e);
@@ -68,11 +68,11 @@ public class DefaultPersonService implements PersonService{
       LOG.error("No indivduals were provided in gedcom string. At least one is expected");
       return null;
     }      
-    Individual individual = gedcomIndividuals.get(GedcomIdXrefConverter.id2Xref(gedcomIndividual.getId()));
+    Individual individual = gedcomIndividuals.get(GedcomUtils.id2Xref(gedcomIndividual.getId()));
     personModel.setFirstName(individual.getNames().get(0).getGivenName().getValue().split(" ")[0]);
     personModel.setLastName(individual.getNames().get(0).getGivenName().getValue().split(" ")[1]);
     personModel.setAge(0);
-    personModel.setDateOfBirth(GedcomDateConverter.convertGedcomDate(individual.getEventsOfType(IndividualEventType.BIRTH).get(0).getDate()
+    personModel.setDateOfBirth(GedcomUtils.convertGedcomDate(individual.getEventsOfType(IndividualEventType.BIRTH).get(0).getDate()
         .getValue()));
     personModel.setPlaceOfBirth(individual.getEventsOfType(IndividualEventType.BIRTH).get(0).getPlace().getPlaceName());
     return personModel;
