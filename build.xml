@@ -105,17 +105,6 @@
     	  <include name="**/*.*"/>
       </fileset>
     </copy>  	
-  	<copy todir="${build.lib.dir}" preservelastmodified="true">
-  	  <fileset dir="hsqldb">
-  	    <include name="**/*.jar"/>
-  	  </fileset>
-  	</copy>
-  	<mkdir dir="${build.classes.dir}/hsqldb"/>
-  	<copy todir="${build.classes.dir}/hsqldb" preservelastmodified="true">
-      <fileset dir="hsqldb">
-        <include name="**/*.sql"/>
-      </fileset>
-    </copy>
   </target>
 	
 	<target name="rebuild" depends="clean,build" description="Clean and build"/>
@@ -200,7 +189,7 @@
 	    </fileset>	  	
 	  	<fileset dir="${tomcat.deploy.dir}">
 	      <include name="${name}.war"/>
-	  	</fileset>
+	  	</fileset>	  	
 	  	<dirset dir="${tomcat.deploy.dir}/${name}"/>
 	  </delete>
 	</target>

@@ -6,7 +6,7 @@
     http://www.springframework.org/schema/beans/spring-beans.xsd
    ">
   
-  <import resource="genealogia-embeddedHsqldb.xml"/>
+  <import resource="hsqldb/genealogia-hsqldb-embedded.xml"/>
 
   <alias alias="personConverter" name="defaultPersonConverter" />
   <bean id="defaultPersonConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.JsonPersonConverter" />

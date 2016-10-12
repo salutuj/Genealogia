@@ -51,7 +51,7 @@
     <property name="password" value="${db.maria.password}" />
   </bean>
   
-  <import resource="genealogia-embeddedHsqldb.xml"/>
+  <import resource="hsqldb/genealogia-hsqldb-embedded.xml"/>
   
   
   <bean id="dataSourceLookupKey" class="java.lang.String">

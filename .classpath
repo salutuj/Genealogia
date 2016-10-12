@@ -67,5 +67,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/mariadb-java-client-1.5.2.jar"/>
+	<classpathentry kind="lib" path="lib/hsqldb-2.3.4.jar" sourcepath="docs/hsqldb-2.3.4-src.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

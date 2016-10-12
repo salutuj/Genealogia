@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"  
+  xmlns:jdbc="http://www.springframework.org/schema/jdbc"  
+  xsi:schemaLocation="
+    http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/jdbc
+    http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+    ">
+  <jdbc:embedded-database id="embeddedHsqldbDataSource" type="HSQL" database-name="genealogia">
+    <jdbc:script location="classpath:hsqldb/genealogia-create.sql" encoding="UTF-8"/>
+    <jdbc:script location="classpath:hsqldb/genealogia-sampledata.sql" encoding="UTF-8" />
+    <jdbc:script location="classpath:hsqldb/genealogia-drop.sql" encoding="UTF-8" execution="DESTROY"/>
+  </jdbc:embedded-database>
+</beans>
