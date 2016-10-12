@@ -11,3 +11,4 @@ hsqldb/build.xml
 docs/mchange-commons-java-0.2.11-sources.jar
 hsqldb/genealogia.lck
 lib/mchange-commons-java-0.2.11.jar
+/output/
