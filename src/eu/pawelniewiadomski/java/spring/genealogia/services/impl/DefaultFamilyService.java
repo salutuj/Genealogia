@@ -23,6 +23,7 @@ import eu.pawelniewiadomski.java.spring.genealogia.model.gedcom.GedcomFamilyMode
 import eu.pawelniewiadomski.java.spring.genealogia.model.gedcom.GedcomIndividualModel;
 import eu.pawelniewiadomski.java.spring.genealogia.services.FamilyService;
 import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
+import eu.pawelniewiadomski.java.spring.genealogia.utils.GedcomIdXrefConverter;
 
 public class DefaultFamilyService implements FamilyService {
 
@@ -62,7 +63,8 @@ public class DefaultFamilyService implements FamilyService {
     familyModel.setId(gedcomFamily.getId());
     GedcomParser parser = new GedcomParser();
     try {
-      parser.load(new BufferedInputStream(new ByteArrayInputStream(gedcomFamily.getGedcom().getBytes())));
+      byte [] gedcomAsBytes = gedcomFamily.getGedcom().replaceAll("\\\\n", "\n").getBytes("UTF-8");
+      parser.load(new BufferedInputStream(new ByteArrayInputStream(gedcomAsBytes)));
     } catch (GedcomParserException e) {
       LOG.error("Incorrect syntax in gedcom string", e);
       return null;
@@ -73,8 +75,9 @@ public class DefaultFamilyService implements FamilyService {
     Map<String, Family> gedcomFamilies = parser.getGedcom().getFamilies();
     if (gedcomFamilies == null || gedcomFamilies.isEmpty()) {
       LOG.error("No families found in gedcom data. At least one must is expected");
+      return null;
     }
-    Family family = gedcomFamilies.get(id2Xref(gedcomFamily.getId()));
+    Family family = gedcomFamilies.get(GedcomIdXrefConverter.id2Xref(gedcomFamily.getId()));
     // TODO familyModel.setFamilyName(family.toString());
     familyModel.setFather(getPersonService().findPersonById(gedcomFamily.getHusbandId()));
     familyModel.setMother(getPersonService().findPersonById(gedcomFamily.getWifeId()));
@@ -84,19 +87,13 @@ public class DefaultFamilyService implements FamilyService {
     else {
       Collection<PersonModel> childrenModels = new ArrayList<PersonModel>();
       for (Individual child : children)
-        childrenModels.add(getPersonService().findPersonById(xref2Id(child.getXref())));
+        childrenModels.add(getPersonService().findPersonById(GedcomIdXrefConverter.xref2Id(child.getXref())));
       familyModel.setChildren(childrenModels);
     }
     return familyModel;
   }
 
-  private String id2Xref(String id) {
-    return "@" + id + "@";
-  }
 
-  private String xref2Id(String xref) {
-    return xref.split("@")[1];
-  }
 
   public void setPersonService(PersonService personService) {
     this.personService = personService;

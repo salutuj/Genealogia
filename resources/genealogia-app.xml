@@ -80,7 +80,9 @@
   </bean>
   
   <alias alias="personService" name="defaultPersonService" />
-  <bean id="defaultPersonService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultPersonService" />
+  <bean id="defaultPersonService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultPersonService">
+    <property name="individualDao" ref="individualDao"/>
+  </bean>
 
   <alias alias="familyService" name="defaultFamilyService" />
   <bean id="defaultFamilyService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultFamilyService">

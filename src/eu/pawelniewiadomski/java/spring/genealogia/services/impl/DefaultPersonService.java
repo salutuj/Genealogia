@@ -19,12 +19,14 @@ import eu.pawelniewiadomski.java.spring.genealogia.model.PersonModel;
 import eu.pawelniewiadomski.java.spring.genealogia.model.gedcom.GedcomIndividualModel;
 import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
 import eu.pawelniewiadomski.java.spring.genealogia.utils.GedcomDateConverter;
+import eu.pawelniewiadomski.java.spring.genealogia.utils.GedcomIdXrefConverter;
 
 public class DefaultPersonService implements PersonService{
 
   protected static final Log LOG = LogFactory.getLog(DefaultPersonService.class);
   
-  private IndividualDao individualDao;  
+  protected IndividualDao individualDao;  
+  
   
 	@Override
 	public PersonModel findPersonById(String individualId) {
@@ -32,7 +34,7 @@ public class DefaultPersonService implements PersonService{
       LOG.error("Individual id is null");
       return null;
     }    
-    GedcomIndividualModel gedcomIndividual = individualDao.findIndividualById(individualId);
+    GedcomIndividualModel gedcomIndividual = getIndividualDao().findIndividualById(individualId);
     return convertGedcomIndividualToPerson(gedcomIndividual);
 	}
 
@@ -52,7 +54,8 @@ public class DefaultPersonService implements PersonService{
     personModel.setId(gedcomIndividual.getId());
     GedcomParser parser = new GedcomParser();
     try {
-      parser.load(new BufferedInputStream(new ByteArrayInputStream(gedcomIndividual.getGedcom().getBytes())));
+      byte [] gedcomAsBytes = gedcomIndividual.getGedcom().replaceAll("\\\\n", "\n").getBytes("UTF-8");
+      parser.load(new BufferedInputStream(new ByteArrayInputStream(gedcomAsBytes)));
     } catch ( GedcomParserException e) {
       LOG.error("Incorrect syntax in gedcom string", e);
       return null;
@@ -65,7 +68,7 @@ public class DefaultPersonService implements PersonService{
       LOG.error("No indivduals were provided in gedcom string. At least one is expected");
       return null;
     }      
-    Individual individual = gedcomIndividuals.get(gedcomIndividual.getId());
+    Individual individual = gedcomIndividuals.get(GedcomIdXrefConverter.id2Xref(gedcomIndividual.getId()));
     personModel.setFirstName(individual.getNames().get(0).getGivenName().getValue().split(" ")[0]);
     personModel.setLastName(individual.getNames().get(0).getGivenName().getValue().split(" ")[1]);
     personModel.setAge(0);
@@ -74,4 +77,15 @@ public class DefaultPersonService implements PersonService{
     personModel.setPlaceOfBirth(individual.getEventsOfType(IndividualEventType.BIRTH).get(0).getPlace().getPlaceName());
     return personModel;
   }
+	
+	
+  public void setIndividualDao(IndividualDao individualDao) {
+    this.individualDao = individualDao;
+  }
+  
+  public IndividualDao getIndividualDao() {
+    return individualDao;
+  }
 }
+
+

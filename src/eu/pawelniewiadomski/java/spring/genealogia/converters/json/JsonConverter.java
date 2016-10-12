@@ -26,8 +26,10 @@ public abstract class JsonConverter<M extends AbstractModel> implements Abstract
           json.append('"').append(val).append('"');       
         else if ( val instanceof JsonObject )
           json.append(((JsonObject)val).raw);
-        else
+        else if ( val != null)
           json.append(val.toString());
+        else
+          json.append("null");
         json.append(',');
       }
       json.deleteCharAt(json.length() - 1);

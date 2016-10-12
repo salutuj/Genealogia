@@ -196,11 +196,12 @@
 	<target name="undeploy" description="Un-Deploy application">		
 	  <delete>	  
 	    <fileset dir="${tomcat.deploy.dir}/${name}">
-	      <include name="**/*.*"/>
-	    </fileset>	 
+	      <include name="**/*"/>
+	    </fileset>	  	
 	  	<fileset dir="${tomcat.deploy.dir}">
 	      <include name="${name}.war"/>
-	  	</fileset>	  		  	
+	  	</fileset>
+	  	<dirset dir="${tomcat.deploy.dir}/${name}"/>
 	  </delete>
 	</target>
 	

@@ -26,7 +26,7 @@ public class DefaultIndividualDao extends NamedParameterJdbcDaoSupport implement
  * i_gedcom: '0 @I2@ INDI\n1 NAME Paweł Henryk Piotr /Niewiadomski/\n2 GIVN Paweł Henryk Piotr\n2 SURN Niewiadomski\n2 NICK salutuj\n2 _AKA /afro/\n1 SEX M\n1 BIRT\n2 DATE 07 OCT 1983\n2 PLAC Katowice\n1 FAMC @F1@\n1 FAMS @F3@\n1 CHAN\n2 DATE 03 MAR 2014\n3 TIME 20:08:07\n2 _WT_USER pawel\n1 OBJE @M1@'
  *   */
   private static final String INDIVIDUAL_QUERY = "" +
-      "SELECT i_id, i_sex, i_gedcom " +
+      "SELECT i_id, i_file, i_rin, i_sex, i_gedcom " +
       "FROM wt_individuals " +
       "WHERE i_id=?";
   
@@ -71,10 +71,11 @@ public class DefaultIndividualDao extends NamedParameterJdbcDaoSupport implement
 
   @Override
   public GedcomIndividualModel findIndividualById(String id) {
-    List<?> individuals = getJdbcTemplate().query(INDIVIDUAL_QUERY, new Object[] {
+    List<GedcomIndividualModel> individuals = getJdbcTemplate().query(INDIVIDUAL_QUERY, new Object[] {
         id },
-        new RowMapper() {
-          public Object mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
+        new RowMapper<GedcomIndividualModel>() {
+          @Override
+          public GedcomIndividualModel mapRow(ResultSet rs, int rowNum) throws SQLException, DataAccessException {
             GedcomIndividualModel individual = new GedcomIndividualModel();
             individual.setId((rs.getString(1)));
             individual.setFile(Integer.valueOf(rs.getInt(2)));
