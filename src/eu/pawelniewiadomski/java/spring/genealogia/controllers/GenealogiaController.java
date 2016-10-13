@@ -1,5 +1,7 @@
 package eu.pawelniewiadomski.java.spring.genealogia.controllers;
 
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,27 +36,27 @@ public class GenealogiaController {
   PersonService personService;
 
   @Autowired
-  private AbstractConverter<FamilyModel, String> familyConverter;
+  private AbstractConverter<FamilyModel, ? extends Object> familyConverter;
 
   @Autowired
-  private AbstractConverter<PersonModel, String> personConverter;
+  private AbstractConverter<PersonModel, ? extends Object> personConverter;
 
   @RequestMapping(value = { "/defaultFamily.json" }, method = RequestMethod.GET)
   public @ResponseBody String getDefaultFamily() {    
     FamilyModel defaultFamily = familyService.getDefaultFamily();
-    return familyConverter.convert(defaultFamily);
+    return familyConverter.convert(defaultFamily).toString();
   }
 
   @RequestMapping(value = { "family-{familyId}.json" }, method = RequestMethod.GET)
   public @ResponseBody String getFamily(@PathVariable String familyId) {
     FamilyModel family = familyService.findFamilyById(familyId);
-    return familyConverter.convert(family);
+    return familyConverter.convert(family).toString();
   }
 
   @RequestMapping(value = { "person-{personId}.json" }, method = RequestMethod.GET)
   public @ResponseBody String getPerson(@PathVariable String personId) {
     PersonModel person = personService.findPersonById(personId);
-    return personConverter.convert(person);
+    return personConverter.convert(person).toString();
   }
 
 }

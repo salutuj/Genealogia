@@ -1,5 +1,7 @@
 package eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,28 +9,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import eu.pawelniewiadomski.java.spring.genealogia.converters.AbstractConverter;
 import eu.pawelniewiadomski.java.spring.genealogia.converters.json.JsonConverter;
-import eu.pawelniewiadomski.java.spring.genealogia.converters.json.JsonObject;
+import eu.pawelniewiadomski.java.spring.genealogia.converters.json.JsonObjectOrArray;
 import eu.pawelniewiadomski.java.spring.genealogia.model.FamilyModel;
 import eu.pawelniewiadomski.java.spring.genealogia.model.PersonModel;
 
 public class JsonFamilyConverter extends JsonConverter<FamilyModel>{
 
   @Autowired
-  AbstractConverter<PersonModel, String> personConverter;
+  AbstractConverter<PersonModel, JsonObjectOrArray> personConverter;
   
-  public void setPersonConverter(AbstractConverter<PersonModel, String> personConverter) {
+  public void setPersonConverter(AbstractConverter<PersonModel, JsonObjectOrArray> personConverter) {
     this.personConverter = personConverter;
   }
   
   @Override
-  public String convert(FamilyModel source) {
+  public JsonObjectOrArray convert(FamilyModel source) {
     Map<String, Object> target = new HashMap<String,Object>();    
     target.put("id", source.getId());
     target.put("name", source.getFamilyName());
-    target.put("father", new JsonObject(personConverter.convert(source.getFather())));
-    target.put("mother", new JsonObject(personConverter.convert(source.getMother())));   
-    
-    return convertToJsonObject(target);
+    target.put("father", personConverter.convert(source.getFather()));
+    target.put("mother", personConverter.convert(source.getMother()));
+    Collection<JsonObjectOrArray> children = new ArrayList<JsonObjectOrArray>(); 
+    for ( PersonModel child : source.getChildren() )
+      children.add(personConverter.convert(child));
+    target.put("children", children);    
+    return new JsonObjectOrArray(convertObjectToJson(target));
   }
   
   
