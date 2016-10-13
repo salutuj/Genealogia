@@ -5,13 +5,17 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.gedcom4j.exception.GedcomParserException;
 import org.gedcom4j.model.Individual;
+import org.gedcom4j.model.IndividualEvent;
 import org.gedcom4j.model.IndividualEventType;
+import org.gedcom4j.model.PersonalName;
+import org.gedcom4j.model.StringWithCustomTags;
 import org.gedcom4j.parser.GedcomParser;
 
 import eu.pawelniewiadomski.java.spring.genealogia.dao.IndividualDao;
@@ -69,12 +73,29 @@ public class DefaultPersonService implements PersonService{
       return null;
     }      
     Individual individual = gedcomIndividuals.get(GedcomUtils.id2Xref(gedcomIndividual.getId()));
-    personModel.setFirstName(individual.getNames().get(0).getGivenName().getValue().split(" ")[0]);
-    personModel.setLastName(individual.getNames().get(0).getGivenName().getValue().split(" ")[1]);
+    List<PersonalName> names = individual.getNames();
+    if ( names != null && names.size() > 0){
+      StringWithCustomTags name = names.get(0).getGivenName();
+      if (name != null){
+        final String fullName[] = name.getValue().split(" ");
+        personModel.setFirstName(fullName[0]);
+        personModel.setLastName(fullName[1]);
+      }
+    }    
     personModel.setAge(0);
-    personModel.setDateOfBirth(GedcomUtils.convertGedcomDate(individual.getEventsOfType(IndividualEventType.BIRTH).get(0).getDate()
-        .getValue()));
-    personModel.setPlaceOfBirth(individual.getEventsOfType(IndividualEventType.BIRTH).get(0).getPlace().getPlaceName());
+    final List<IndividualEvent> birthEventsList = individual.getEventsOfType(IndividualEventType.BIRTH);
+    if (birthEventsList != null && birthEventsList.size() > 0 ){ 
+      final IndividualEvent birthEvent = birthEventsList.get(0);
+      personModel.setDateOfBirth(GedcomUtils.convertGedcomDate(birthEvent.getDate().getValue()));
+      personModel.setPlaceOfBirth(birthEvent.getPlace().getPlaceName());
+    }
+    final List<IndividualEvent> deathEventsList = individual.getEventsOfType(IndividualEventType.DEATH);
+    if (deathEventsList != null && deathEventsList.size() > 0 ){
+      final IndividualEvent deathEvent = deathEventsList.get(0);
+      personModel.setDateOfBirth(GedcomUtils.convertGedcomDate(deathEvent.getDate().getValue()));
+      personModel.setPlaceOfDeath(deathEvent.getPlace().getPlaceName());
+    }
+    personModel.setRelationToParent(individual.getSex().getValue().equals("M") ? "Son" : "Daughter");
     return personModel;
   }
 	

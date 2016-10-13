@@ -12,8 +12,10 @@ public class PersonModel extends AbstractModel {
   private Date dateOfBirth;
   private Date dateOfDeath;
   private String placeOfBirth;
+  private String placeOfDeath;
   private String maidenName;
-  private String middleName;
+  private String middleName;  
+  private String relationToParent;
   private Collection<PersonEventModel> events;
 
   public String getId() {
@@ -44,7 +46,7 @@ public class PersonModel extends AbstractModel {
     return dateOfBirth;
   }
 
-  public Date getDateOFDeath() {
+  public Date getDateOfDeath() {
     return dateOfDeath;
   }
 
@@ -52,6 +54,14 @@ public class PersonModel extends AbstractModel {
     return placeOfBirth;
   }
 
+  public String getPlaceOfDeath() {
+    return placeOfDeath;
+  }
+  
+  public String getRelationToParent() {
+    return relationToParent;
+  }
+ 
   public void setId(String id) {
     this.id = id;
   }
@@ -86,6 +96,14 @@ public class PersonModel extends AbstractModel {
 
   public void setPlaceOfBirth(String placeOfBirth) {
     this.placeOfBirth = placeOfBirth;
+  }
+
+  public void setPlaceOfDeath(String placeOfDeath) {
+    this.placeOfDeath = placeOfDeath;
+  }
+  
+  public void setRelationToParent(String relationToParent) {
+    this.relationToParent = relationToParent;
   }
 
   /**

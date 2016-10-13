@@ -17,7 +17,10 @@ public class JsonPersonConverter extends JsonConverter<PersonModel>{
     target.put("lastName", source.getLastName());
     target.put("age", source.getAge());
     target.put("dateOfBirth", source.getDateOfBirth());
+    target.put("dateOfDeath", source.getDateOfDeath());
     target.put("placeOfBirth", source.getPlaceOfBirth());
+    target.put("placeOfDeath", source.getPlaceOfDeath());
+    target.put("relationToParent", source.getRelationToParent());
     return new JsonObjectOrArray(convertObjectToJson(target));
   }
 
