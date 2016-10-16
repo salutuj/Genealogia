@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="testsrc"/>
 	<classpathentry kind="src" path="resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_45"/>
-	<classpathentry kind="lib" path="C:/PROJ/train/tomcat8/apache-tomcat-8.0.29/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="C:/PROJ/train/tomcat8/apache-tomcat-8.0.29/lib/servlet-api.jar" sourcepath="C:/PROJ/train/tomcat8/apache-tomcat-8.0.29-src.zip"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.2.jar" sourcepath="C:/Users/i303767/.m2/repository/commons-logging/commons-logging/1.2/commons-logging-1.2-sources.jar"/>
 	<classpathentry kind="lib" path="lib/spring-core-4.3.1.RELEASE.jar" sourcepath="docs/spring-core-4.3.1.RELEASE-sources.jar">
 		<attributes>

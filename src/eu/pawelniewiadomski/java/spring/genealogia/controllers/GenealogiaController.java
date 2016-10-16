@@ -1,11 +1,10 @@
 package eu.pawelniewiadomski.java.spring.genealogia.controllers;
 
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Required;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +23,7 @@ import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
  */
 
 @Controller(value="genealogiaController")
-@RequestMapping(produces = "application/json; charset=UTF-8")
+@RequestMapping(produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class GenealogiaController {
 
   protected static final Log LOG = LogFactory.getLog(GenealogiaController.class);
@@ -41,19 +40,19 @@ public class GenealogiaController {
   @Autowired
   private AbstractConverter<PersonModel, ? extends Object> personConverter;
 
-  @RequestMapping(value = { "/defaultFamily.json" }, method = RequestMethod.GET)
+  @RequestMapping(value = { "/family/default.json" }, method = RequestMethod.GET)
   public @ResponseBody String getDefaultFamily() {    
     FamilyModel defaultFamily = familyService.getDefaultFamily();
     return familyConverter.convert(defaultFamily).toString();
   }
 
-  @RequestMapping(value = { "family-{familyId}.json" }, method = RequestMethod.GET)
+  @RequestMapping(value = { "/family/{familyId}.json" }, method = RequestMethod.GET)
   public @ResponseBody String getFamily(@PathVariable String familyId) {
     FamilyModel family = familyService.findFamilyById(familyId);
     return familyConverter.convert(family).toString();
   }
 
-  @RequestMapping(value = { "person-{personId}.json" }, method = RequestMethod.GET)
+  @RequestMapping(value = { "/person/{personId}.json" }, method = RequestMethod.GET)
   public @ResponseBody String getPerson(@PathVariable String personId) {
     PersonModel person = personService.findPersonById(personId);
     return personConverter.convert(person).toString();

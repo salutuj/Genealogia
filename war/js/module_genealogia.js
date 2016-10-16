@@ -3,11 +3,11 @@ genealogiaMod.config(function($routeProvider){
   $routeProvider.when('/', {
 	  templateUrl: 'ng-views/familyDetails.html',
 	  controller: 'DefaultFamilyCtrl'
-  }).when('/family-:familyId',{
-	  template: 'ng-views/familyDetails.html',
+  }).when('/family/:familyId',{
+	  templateUrl: 'ng-views/familyDetails.html',
 	  controller: 'FamilyCtrl'
-  }).when('/person-:personId',{
-	  template: 'ng-views/personDetails.html',
+  }).when('/person/:personId',{
+	  templateUrl: 'ng-views/personDetails.html',
 	  controller: 'PersonCtrl'
   }).otherwise({
 	  redirectTo: '/'
@@ -16,19 +16,19 @@ genealogiaMod.config(function($routeProvider){
 });
 
 genealogiaMod.controller('DefaultFamilyCtrl', function ($scope, $http){
-	  $http.get('defaultFamily.json').success(function(data){
+	  $http.get('family/default.json').success(function(data){
 	    $scope.family = data;
 	  })	
 	});
 
-genealogiaMod.controller('PersonCtrl', function ($scope, $http){
-  $http.get('person-{{personId}}.json').success(function(data){
+genealogiaMod.controller('PersonCtrl', function ($scope, $routeParams, $http){
+  $http.get('person/' + $routeParams.personId + '.json').success(function(data){
     $scope.person = data;
   })	
 });
 
-genealogiaMod.controller('FamilyCtrl', function ($scope, $http){
-  $http.get('family-{{familyId}}.json').success(function(data){
+genealogiaMod.controller('FamilyCtrl', function ($scope, $routeParams, $http){
+  $http.get('family/' + $routeParams.familyId + '.json').success(function(data){
     $scope.family = data;
   })	
 });
