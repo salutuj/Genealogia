@@ -1,5 +1,7 @@
 var genealogiaMod = angular.module('genealogiaMod', ['ngRoute']);
-genealogiaMod.config(function($routeProvider){
+genealogiaMod.config(function($routeProvider, $locationProvider){
+  //use the HTML5 History API
+  $locationProvider.html5Mode(true);
   $routeProvider.when('/', {
 	  templateUrl: 'ng-views/familyDetails.html',
 	  controller: 'DefaultFamilyCtrl'
@@ -12,14 +14,13 @@ genealogiaMod.config(function($routeProvider){
   }).otherwise({
 	  redirectTo: '/'
   });
-  
 });
 
 genealogiaMod.controller('DefaultFamilyCtrl', function ($scope, $http){
-	  $http.get('family/default.json').success(function(data){
-	    $scope.family = data;
-	  })	
-	});
+  $http.get('family/default.json').success(function(data){
+    $scope.family = data;
+  })	
+});
 
 genealogiaMod.controller('PersonCtrl', function ($scope, $routeParams, $http){
   $http.get('person/' + $routeParams.personId + '.json').success(function(data){
