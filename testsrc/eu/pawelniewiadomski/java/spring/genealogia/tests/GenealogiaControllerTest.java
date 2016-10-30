@@ -3,8 +3,6 @@ package eu.pawelniewiadomski.java.spring.genealogia.tests;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.annotation.Resource;
-
 import org.gedcom4j.exception.GedcomParserException;
 import org.gedcom4j.model.Family;
 import org.gedcom4j.model.Individual;
@@ -25,11 +23,12 @@ import org.testng.annotations.Test;
 
 import eu.pawelniewiadomski.java.spring.genealogia.controllers.GenealogiaController;
 import eu.pawelniewiadomski.java.spring.genealogia.converters.AbstractConverter;
+import eu.pawelniewiadomski.java.spring.genealogia.converters.json.JsonObjectOrArray;
 import eu.pawelniewiadomski.java.spring.genealogia.model.FamilyModel;
 import eu.pawelniewiadomski.java.spring.genealogia.model.PersonModel;
 import eu.pawelniewiadomski.java.spring.genealogia.services.FamilyService;
+import eu.pawelniewiadomski.java.spring.genealogia.services.GedcomService;
 import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
-import eu.pawelniewiadomski.java.spring.genealogia.utils.GedcomUtils;
 
 
 @WebAppConfiguration
@@ -45,13 +44,13 @@ public class GenealogiaControllerTest extends BaseTest{
   private PersonService personService;
 
   @Mock
-  private AbstractConverter<FamilyModel, String> familyConverter;
+  private AbstractConverter<FamilyModel, JsonObjectOrArray> familyConverter;
 
   @Autowired  
-  private AbstractConverter<FamilyModel, String> realFamilyConverter;
+  private AbstractConverter<FamilyModel, JsonObjectOrArray> realFamilyConverter;
   
   @Autowired
-  private AbstractConverter<PersonModel, String> realPersonConverter;
+  private AbstractConverter<PersonModel, JsonObjectOrArray> realPersonConverter;
   
   @InjectMocks
   private GenealogiaController genealogiaController;
@@ -75,14 +74,14 @@ public class GenealogiaControllerTest extends BaseTest{
     father.setFirstName(defaultGedcomFamily.getHusband().getNames().get(0).getGivenName().getValue().split(" ")[0]);
     father.setMiddleName(defaultGedcomFamily.getHusband().getNames().get(0).getGivenName().getValue().split(" ")[1]);
     father.setLastName(defaultGedcomFamily.getHusband().getNames().get(0).getSurname().getValue());
-    father.setDateOfBirth(GedcomUtils.convertGedcomDate(defaultGedcomFamily.getHusband().getEvents().get(0).getDate().getValue()));
+    father.setDateOfBirth(GedcomService.convertGedcomDate(defaultGedcomFamily.getHusband().getEvents().get(0).getDate().getValue()));
     father.setPlaceOfBirth(defaultGedcomFamily.getHusband().getEvents().get(0).getPlace().getPlaceName());
     PersonModel mother = new PersonModel();
     mother.setId(defaultGedcomFamily.getWife().getXref());
     mother.setFirstName(defaultGedcomFamily.getWife().getNames().get(0).getGivenName().getValue().split(" ")[0]);
     mother.setMiddleName(defaultGedcomFamily.getWife().getNames().get(0).getGivenName().getValue().split(" ")[1]);
     mother.setLastName(defaultGedcomFamily.getWife().getNames().get(0).getSurname().getValue());
-    mother.setDateOfBirth(GedcomUtils.convertGedcomDate(defaultGedcomFamily.getWife().getEvents().get(0).getDate().getValue()));
+    mother.setDateOfBirth(GedcomService.convertGedcomDate(defaultGedcomFamily.getWife().getEvents().get(0).getDate().getValue()));
     mother.setPlaceOfBirth(defaultGedcomFamily.getWife().getEvents().get(0).getPlace().getPlaceName());
     PersonModel child = new PersonModel();
     Individual gedcomChild = defaultGedcomFamily.getChildren().get(0);
@@ -90,7 +89,7 @@ public class GenealogiaControllerTest extends BaseTest{
     child.setFirstName(gedcomChild.getNames().get(0).getGivenName().getValue().split(" ")[0]);
     child.setMiddleName(gedcomChild.getNames().get(0).getGivenName().getValue().split(" ")[1]);
     child.setLastName(gedcomChild.getNames().get(0).getSurname().getValue());
-    child.setDateOfBirth(GedcomUtils.convertGedcomDate(gedcomChild.getEvents().get(0).getDate().getValue()));
+    child.setDateOfBirth(GedcomService.convertGedcomDate(gedcomChild.getEvents().get(0).getDate().getValue()));
     child.setPlaceOfBirth(gedcomChild.getEvents().get(0).getPlace().getPlaceName());
     FamilyModel defaultFamilyModel = new FamilyModel();
     defaultFamilyModel.setId(defaultGedcomFamily.getXref());

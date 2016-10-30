@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import eu.pawelniewiadomski.java.spring.genealogia.converters.AbstractConverter;
@@ -58,4 +59,9 @@ public class GenealogiaController {
     return personConverter.convert(person).toString();
   }
 
+  @RequestMapping(value = { "/person/{personId}/ancestryTree.json" }, method = RequestMethod.GET)
+  public @ResponseBody String getPersonAncestryTree(@PathVariable String personId, @RequestParam int maxLevel) {
+    PersonModel person = personService.findPersonWithAncestors(personId, maxLevel);    
+    return personConverter.convert(person).toString();
+  }
 }

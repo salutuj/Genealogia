@@ -29,24 +29,26 @@ public class FamilyModel extends AbstractModel {
   public Collection<PersonModel> getChildren() {
     return children;
   }
+  
+  //setters
 
-  public void setId(String id) {
+  public void setId(final String id) {
     this.id = id;
   }
 
-  public void setFamilyName(String familyName) {
+  public void setFamilyName(final String familyName) {
     this.familyName = familyName;
   }
 
-  public void setFather(PersonModel father) {
+  public void setFather(final PersonModel father) {
     this.father = father;
   }
 
-  public void setMother(PersonModel mother) {
+  public void setMother(final PersonModel mother) {
     this.mother = mother;
   }
 
-  public void setChildren(Collection<PersonModel> children) {
+  public void setChildren(final Collection<PersonModel> children) {
     this.children = children;
   }
 }

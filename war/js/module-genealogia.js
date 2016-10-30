@@ -1,4 +1,4 @@
-var genealogiaMod = angular.module('genealogiaMod', ['ngRoute', 'googleMapMod']);
+var genealogiaMod = angular.module('genealogiaMod', ['ngRoute', 'personServiceModule', 'googleMapModule']);
 genealogiaMod.config(function($routeProvider){
   $routeProvider.when('/', {
 	  templateUrl: 'ng-views/familyDetails.html',
@@ -33,14 +33,5 @@ FamilyController.$inject = ['$scope', '$routeParams', '$http'];
 genealogiaMod.controller('FamilyController', FamilyController);
 
 
-var PersonController = function ($scope, $routeParams, $http, GoogleMapService){   
-  $http.get('person/' + $routeParams.personId + '.json').success(function(data){
-    $scope.person = data;
-  });    
-  $scope.$on('$includeContentLoaded', function(funObj, url) {
-    if ( url == 'ng-views/mapWidget.html')
-      GoogleMapService.loadGoogleMap();
-  });
-};
-PersonController.$inject = ['$scope', '$routeParams', '$http', 'GoogleMapService'];
+PersonController.$inject = ['$scope', '$routeParams', '$http', 'GoogleMapService', 'PersonService'];
 genealogiaMod.controller('PersonController', PersonController);
