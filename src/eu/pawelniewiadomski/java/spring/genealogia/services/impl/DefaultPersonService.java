@@ -2,6 +2,7 @@ package eu.pawelniewiadomski.java.spring.genealogia.services.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -16,7 +17,10 @@ import org.gedcom4j.model.StringWithCustomTags;
 
 import eu.pawelniewiadomski.java.spring.genealogia.dao.IndividualDao;
 import eu.pawelniewiadomski.java.spring.genealogia.model.FamilyModel;
+import eu.pawelniewiadomski.java.spring.genealogia.model.PersonEventModel;
+import eu.pawelniewiadomski.java.spring.genealogia.model.PersonEventModel.EventType;
 import eu.pawelniewiadomski.java.spring.genealogia.model.PersonModel;
+import eu.pawelniewiadomski.java.spring.genealogia.model.PlaceModel;
 import eu.pawelniewiadomski.java.spring.genealogia.model.gedcom.GedcomIndividualModel;
 import eu.pawelniewiadomski.java.spring.genealogia.services.FamilyService;
 import eu.pawelniewiadomski.java.spring.genealogia.services.GedcomService;
@@ -43,10 +47,13 @@ public class DefaultPersonService implements PersonService {
     Individual individual = gedcomService.getIndividualById(individualId);
     if ( individual == null || individual.getEvents() == null){
       GedcomIndividualModel gedcomIndividual = getIndividualDao().findIndividualById(individualId);
-      gedcomService.parseGedcom(gedcomIndividual.getGedcom());
-      individual = gedcomService.getIndividualById(individualId);
-    }
-    return convertIndividualToPersonModel(individualId, individual);
+      if ( gedcomIndividual != null ){
+        gedcomService.parseGedcom(gedcomIndividual.getGedcom());
+      } else
+        LOG.warn("Individual " + individualId + " not found!");      
+      individual = gedcomService.getIndividualById(individualId);      
+     }
+    return individual != null ? convertIndividualToPersonModel(individualId, individual) : null;
   }
 
   @Override
@@ -71,14 +78,16 @@ public class DefaultPersonService implements PersonService {
     final List<IndividualEvent> birthEventsList = individual.getEventsOfType(IndividualEventType.BIRTH);
     if (birthEventsList != null && birthEventsList.size() > 0) {
       final IndividualEvent birthEvent = birthEventsList.get(0);
-      personModel.setDateOfBirth(GedcomService.convertGedcomDate(birthEvent.getDate().getValue()));
-      personModel.setPlaceOfBirth(birthEvent.getPlace().getPlaceName());
+      PersonEventModel birthModel = createPersonEvent(EventType.BIRTH, birthEvent.getDate().getValue(),
+          birthEvent.getPlace().getPlaceName(), birthEvent.getPlace().getLatitude().getValue(), birthEvent.getPlace().getLatitude().getValue());
+      personModel.setBirth(birthModel);
     }
     final List<IndividualEvent> deathEventsList = individual.getEventsOfType(IndividualEventType.DEATH);
     if (deathEventsList != null && deathEventsList.size() > 0) {
       final IndividualEvent deathEvent = deathEventsList.get(0);
-      personModel.setDateOfBirth(GedcomService.convertGedcomDate(deathEvent.getDate().getValue()));
-      personModel.setPlaceOfDeath(deathEvent.getPlace().getPlaceName());
+      PersonEventModel deathModel = createPersonEvent(EventType.DEATH, deathEvent.getDate().getValue(),
+          deathEvent.getPlace().getPlaceName(), deathEvent.getPlace().getLatitude().getValue(), deathEvent.getPlace().getLatitude().getValue());
+      personModel.setBirth(deathModel);     
     }
     StringWithCustomTags sex = individual.getSex();
     if (sex != null && sex.getValue() != null) 
@@ -98,7 +107,19 @@ public class DefaultPersonService implements PersonService {
     }
     return personModel;
   }
-
+  
+  
+private PersonEventModel createPersonEvent( EventType type, String date, String place, String latitude, String longitude){
+  PersonEventModel eventModel = new PersonEventModel();
+  eventModel.setType(type);
+  eventModel.setEventStartDate(GedcomService.convertGedcomDate(date));
+  PlaceModel eventPlace = new PlaceModel();
+  eventPlace.setName(place);
+  eventPlace.setGpsLat(GedcomService.convertPositionValue(latitude));
+  eventPlace.setGpsLong(GedcomService.convertPositionValue(longitude));
+  eventModel.setPlace(eventPlace);
+  return eventModel;
+}
  
   @Override
   public PersonModel findPersonWithAncestors(final String personId, final int maxLevel) {

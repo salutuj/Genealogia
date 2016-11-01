@@ -4,9 +4,15 @@ import java.util.Date;
 
 public class PersonEventModel extends AbstractModel {
 
+  public enum EventType {
+    BIRTH,
+    BAPTISM,
+    MARRIAGE,
+    DEATH
+  }
+  private EventType type;
   private String personId;
-  private double gpsLat;
-  private double gpsLong;
+  private PlaceModel place; 
   private Date eventStartDate;
   private Date eventStopDate;
   private Object eventCustomData;
@@ -22,30 +28,7 @@ public class PersonEventModel extends AbstractModel {
   public void setPersonId(String personId) {
     this.personId = personId;
   }
-  /**
-   * @return the gpsLat
-   */
-  public double getGpsLat() {
-    return gpsLat;
-  }
-  /**
-   * @param gpsLat the gpsLat to set
-   */
-  public void setGpsLat(double gpsLat) {
-    this.gpsLat = gpsLat;
-  }
-  /**
-   * @return the gpsLong
-   */
-  public double getGpsLong() {
-    return gpsLong;
-  }
-  /**
-   * @param gpsLong the gpsLong to set
-   */
-  public void setGpsLong(double gpsLong) {
-    this.gpsLong = gpsLong;
-  }
+
   /**
    * @return the eventStartDate
    */
@@ -81,5 +64,29 @@ public class PersonEventModel extends AbstractModel {
    */
   public void setEventCustomData(Object eventCustomData) {
     this.eventCustomData = eventCustomData;
+  }
+  /**
+   * @return the place
+   */
+  public PlaceModel getPlace() {
+    return place;
+  }
+  /**
+   * @param place the place to set
+   */
+  public void setPlace(PlaceModel place) {
+    this.place = place;
+  }
+  /**
+   * @return the type
+   */
+  public EventType getType() {
+    return type;
+  }
+  /**
+   * @param type the type to set
+   */
+  public void setType(EventType type) {
+    this.type = type;
   }
 }

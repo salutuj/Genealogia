@@ -7,10 +7,5 @@
    ">
   
   <import resource="hsqldb/genealogia-hsqldb-embedded.xml"/>
-
-  <alias alias="personConverter" name="defaultPersonConverter" />
-  <bean id="defaultPersonConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.JsonPersonConverter" />
-  
-  <alias alias="familyConverter" name="defaultFamilyConverter" />
-  <bean id="defaultFamilyConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.JsonFamilyConverter" />  
+  <import resource="genealogia-converters.xml"/>   
 </beans>

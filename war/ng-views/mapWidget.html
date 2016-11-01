@@ -1,2 +1,7 @@
-<div id="googleMap" style="width:580px; height:400px;">
-</div>
+<form name="mapForm" ng-controller="GoogleMapController">
+<table>
+<tr><td>Show ancestry tree:</td><td><input type="checkbox" ng-model="map.showAncestry"/></td></tr>
+<tr><td>Max ancestry level:</td><td><input ng-model="map.maxAncestryLevel" ngPattern="[0-9]{1}"/></td></tr>
+<tr><td colspan="2"><div id="googleMap" style="width:640px; height:480px;"></div></td></tr>
+</table>
+</form>

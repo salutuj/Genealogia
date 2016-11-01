@@ -20,6 +20,9 @@ public class GedcomIndividualModel extends AbstractModel{
  *    1 BIRT\n
  *    2 DATE 07 OCT 1983\n
  *    2 PLAC Katowice\n
+ *    3 MAP
+ *    4 LATI 50.123456
+ *    4 LONG 19.123456
  *    1 FAMC @F1@\n
  *    1 FAMS @F3@\n
  *    1 CHAN\n

@@ -9,13 +9,11 @@ public class PersonModel extends AbstractModel {
   private String firstName;
   private String lastName;
   private int age;
-  private Date dateOfBirth;
-  private Date dateOfDeath;
-  private String placeOfBirth;
-  private String placeOfDeath;
   private String maidenName;
   private String middleName;
   private String relationToParent;
+  private PersonEventModel birth;
+  private PersonEventModel death;
   private Collection<PersonEventModel> events;
   private Collection<String> familiesAsChild;
   private Collection<String> familiesAsSpouse;
@@ -44,22 +42,6 @@ public class PersonModel extends AbstractModel {
 
   public int getAge() {
     return age;
-  }
-
-  public Date getDateOfBirth() {
-    return dateOfBirth;
-  }
-
-  public Date getDateOfDeath() {
-    return dateOfDeath;
-  }
-
-  public String getPlaceOfBirth() {
-    return placeOfBirth;
-  }
-
-  public String getPlaceOfDeath() {
-    return placeOfDeath;
   }
 
   public String getRelationToParent() {
@@ -121,22 +103,6 @@ public class PersonModel extends AbstractModel {
     this.age = age;
   }
 
-  public void setDateOfBirth(final Date dateOfBirth) {
-    this.dateOfBirth = dateOfBirth;
-  }
-
-  public void setDateOfDeath(final Date dateOfDeath) {
-    this.dateOfDeath = dateOfDeath;
-  }
-
-  public void setPlaceOfBirth(final String placeOfBirth) {
-    this.placeOfBirth = placeOfBirth;
-  }
-
-  public void setPlaceOfDeath(final String placeOfDeath) {
-    this.placeOfDeath = placeOfDeath;
-  }
-
   public void setRelationToParent(final String relationToParent) {
     this.relationToParent = relationToParent;
   }
@@ -171,6 +137,34 @@ public class PersonModel extends AbstractModel {
    */
   public void setMother(PersonModel mother) {
     this.mother = mother;
+  }
+
+  /**
+   * @return the birth
+   */
+  public PersonEventModel getBirth() {
+    return birth;
+  }
+
+  /**
+   * @param birth the birth to set
+   */
+  public void setBirth(PersonEventModel birth) {
+    this.birth = birth;
+  }
+
+  /**
+   * @return the death
+   */
+  public PersonEventModel getDeath() {
+    return death;
+  }
+
+  /**
+   * @param death the death to set
+   */
+  public void setDeath(PersonEventModel death) {
+    this.death = death;
   }
 
 }

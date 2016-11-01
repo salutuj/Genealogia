@@ -35,4 +35,11 @@ public interface GedcomService {
     return xref.split("@")[1];
   }
   
+  static double convertPositionValue(String positionValue){
+    if (positionValue.startsWith("N") || positionValue.startsWith("E"))
+      return Double.parseDouble(positionValue.substring(1));
+    else
+      return -Double.parseDouble(positionValue.substring(1));
+  }
+  
 }
