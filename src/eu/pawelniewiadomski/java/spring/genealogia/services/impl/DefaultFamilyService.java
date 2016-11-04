@@ -57,8 +57,10 @@ public class DefaultFamilyService implements FamilyService {
     FamilyModel familyModel = new FamilyModel();
     familyModel.setId(familyId);        
     // TODO familyModel.setFamilyName(family.toString());
-    familyModel.setFather(getPersonService().findPersonById(GedcomService.xref2Id(family.getHusband().getXref())));
-    familyModel.setMother(getPersonService().findPersonById(GedcomService.xref2Id(family.getWife().getXref())));
+    final String fatherId = GedcomService.xref2Id(family.getHusband().getXref());
+    familyModel.setFather(getPersonService().findPersonById(fatherId));
+    final String motherId = GedcomService.xref2Id(family.getWife().getXref());
+    familyModel.setMother(getPersonService().findPersonById(motherId));
     List<Individual> children = family.getChildren();
     if (children == null || children.isEmpty())
       familyModel.setChildren(Collections.emptyList());

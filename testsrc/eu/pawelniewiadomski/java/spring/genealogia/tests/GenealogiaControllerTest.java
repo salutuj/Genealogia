@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import org.gedcom4j.exception.GedcomParserException;
 import org.gedcom4j.model.Family;
 import org.gedcom4j.model.Individual;
+import org.gedcom4j.model.IndividualEvent;
+import org.gedcom4j.model.IndividualEventType;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -25,7 +27,10 @@ import eu.pawelniewiadomski.java.spring.genealogia.controllers.GenealogiaControl
 import eu.pawelniewiadomski.java.spring.genealogia.converters.AbstractConverter;
 import eu.pawelniewiadomski.java.spring.genealogia.converters.json.JsonObjectOrArray;
 import eu.pawelniewiadomski.java.spring.genealogia.model.FamilyModel;
+import eu.pawelniewiadomski.java.spring.genealogia.model.PersonEventModel;
+import eu.pawelniewiadomski.java.spring.genealogia.model.PersonEventModel.EventType;
 import eu.pawelniewiadomski.java.spring.genealogia.model.PersonModel;
+import eu.pawelniewiadomski.java.spring.genealogia.model.PlaceModel;
 import eu.pawelniewiadomski.java.spring.genealogia.services.FamilyService;
 import eu.pawelniewiadomski.java.spring.genealogia.services.GedcomService;
 import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
@@ -74,23 +79,20 @@ public class GenealogiaControllerTest extends BaseTest{
     father.setFirstName(defaultGedcomFamily.getHusband().getNames().get(0).getGivenName().getValue().split(" ")[0]);
     father.setMiddleName(defaultGedcomFamily.getHusband().getNames().get(0).getGivenName().getValue().split(" ")[1]);
     father.setLastName(defaultGedcomFamily.getHusband().getNames().get(0).getSurname().getValue());
-    father.setDateOfBirth(GedcomService.convertGedcomDate(defaultGedcomFamily.getHusband().getEvents().get(0).getDate().getValue()));
-    father.setPlaceOfBirth(defaultGedcomFamily.getHusband().getEvents().get(0).getPlace().getPlaceName());
+    father.setBirth(setupBirthEvent(defaultGedcomFamily.getHusband()));
     PersonModel mother = new PersonModel();
     mother.setId(defaultGedcomFamily.getWife().getXref());
     mother.setFirstName(defaultGedcomFamily.getWife().getNames().get(0).getGivenName().getValue().split(" ")[0]);
     mother.setMiddleName(defaultGedcomFamily.getWife().getNames().get(0).getGivenName().getValue().split(" ")[1]);
     mother.setLastName(defaultGedcomFamily.getWife().getNames().get(0).getSurname().getValue());
-    mother.setDateOfBirth(GedcomService.convertGedcomDate(defaultGedcomFamily.getWife().getEvents().get(0).getDate().getValue()));
-    mother.setPlaceOfBirth(defaultGedcomFamily.getWife().getEvents().get(0).getPlace().getPlaceName());
+    mother.setBirth(setupBirthEvent(defaultGedcomFamily.getWife()));
     PersonModel child = new PersonModel();
     Individual gedcomChild = defaultGedcomFamily.getChildren().get(0);
     child.setId(gedcomChild.getXref());
     child.setFirstName(gedcomChild.getNames().get(0).getGivenName().getValue().split(" ")[0]);
     child.setMiddleName(gedcomChild.getNames().get(0).getGivenName().getValue().split(" ")[1]);
     child.setLastName(gedcomChild.getNames().get(0).getSurname().getValue());
-    child.setDateOfBirth(GedcomService.convertGedcomDate(gedcomChild.getEvents().get(0).getDate().getValue()));
-    child.setPlaceOfBirth(gedcomChild.getEvents().get(0).getPlace().getPlaceName());
+    child.setBirth(setupBirthEvent(gedcomChild));    
     FamilyModel defaultFamilyModel = new FamilyModel();
     defaultFamilyModel.setId(defaultGedcomFamily.getXref());
     defaultFamilyModel.setFamilyName("Niewiadomscy");
@@ -103,7 +105,21 @@ public class GenealogiaControllerTest extends BaseTest{
     Mockito.when(familyConverter.convert(defaultFamilyModel)).thenReturn(realFamilyConverter.convert(defaultFamilyModel));
   }
   
-  
+  public PersonEventModel setupBirthEvent(Individual individual){
+    PersonEventModel birthEvent = new PersonEventModel();
+    for ( IndividualEvent event : individual.getEvents())
+      if ( event.getType() == IndividualEventType.BIRTH ){                   
+        birthEvent.setType(EventType.BIRTH);
+        PlaceModel birthPlace = new PlaceModel();
+        birthPlace.setName(event.getPlace().getPlaceName());
+        birthPlace.setGpsLat(Double.parseDouble(event.getPlace().getLatitude().getValue()));
+        birthPlace.setGpsLong(Double.parseDouble(event.getPlace().getLongitude().getValue()));
+        birthEvent.setPlace(birthPlace);        
+        birthEvent.setPersonId(GedcomService.xref2Id(individual.getXref()));
+        birthEvent.setEventStartDate(GedcomService.convertGedcomDate(event.getDate().getValue()));                      
+    }
+    return birthEvent;
+  }
    
  
   

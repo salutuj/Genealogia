@@ -72,6 +72,9 @@ public class Gedcom4jTest {
     personData.append("1 BIRT\n");
     personData.append("2 DATE 07 OCT 1983\n");
     personData.append("2 PLAC Katowice\n");
+    personData.append("3 MAP\n");
+    personData.append("4 LATI N50.231433\n");
+    personData.append("4 LONG E18.983352\n");
     personData.append("1 FAMC @F1@\n");
     personData.append("1 FAMS @F3@\n");
     personData.append("1 CHAN\n");
@@ -199,6 +202,8 @@ public class Gedcom4jTest {
       Assert.assertTrue(individual.getEvents().get(0).getType().equals(IndividualEventType.BIRTH));
       Assert.assertNotNull(individual.getEvents().get(0).getPlace());
       Assert.assertTrue(individual.getEvents().get(0).getPlace().getPlaceName().equals("Katowice"));
+      Assert.assertTrue(individual.getEvents().get(0).getPlace().getLatitude().getValue().equals("N50.231433"));
+      Assert.assertTrue(individual.getEvents().get(0).getPlace().getLongitude().getValue().equals("E18.983352"));      
     }
   }
 
