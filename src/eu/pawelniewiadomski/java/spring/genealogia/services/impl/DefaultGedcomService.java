@@ -26,6 +26,10 @@ public class DefaultGedcomService implements GedcomService {
     this.gedcomParser = gedcomParser;
   }
 
+  public GedcomParser getGedcomParser() {
+    return gedcomParser;
+  }
+  
   @Override
   public boolean parseGedcom(String gedcom) {
     return parseGedcomNonBOMUTF(gedcom);
