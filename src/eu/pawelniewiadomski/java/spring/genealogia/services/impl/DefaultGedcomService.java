@@ -29,18 +29,29 @@ public class DefaultGedcomService implements GedcomService {
   public GedcomParser getGedcomParser() {
     return gedcomParser;
   }
-  
+
   @Override
-  public boolean parseGedcom(String gedcom) {
-    return parseGedcomNonBOMUTF(gedcom);
+  public boolean parseGedcomAsString(String gedcom) {
+    if (gedcom == null || gedcom.isEmpty()) throw new NullPointerException("gedcom string is null or empty");
+    try {
+      return parseGedcomAsByteArray( convertGedcomNonBOMUtf8ToByteArray(gedcom));
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+    return false;
   }
 
-  private boolean parseGedcomNonBOMUTF(final String gedcom) {
-    if (gedcom == null || gedcom.isEmpty()) throw new NullPointerException("gedcom string is null or empty");
+  @Override
+  public boolean parseGedcomAsByteArray(final byte [] gedcomAsBytes) {
+    if (gedcomAsBytes == null || gedcomAsBytes.length > 0) throw new NullPointerException("gedcomAsBytes is null or empty");        
+    return parseGedcomAsInputStream(new BufferedInputStream(new ByteArrayInputStream(gedcomAsBytes)));
+  }
 
+  @Override
+  public boolean parseGedcomAsInputStream(final BufferedInputStream gedcomAsInputStream) {
+    if (gedcomAsInputStream == null) throw new NullPointerException("gedcomAsInputStream is null or empty");
     try {
-      byte[] gedcomAsBytes = convertGedcomNonBOMUtf8ToByteArray(gedcom);
-      gedcomParser.load(new BufferedInputStream(new ByteArrayInputStream(gedcomAsBytes)));
+      getGedcomParser().load(gedcomAsInputStream);
       return true;
     } catch (GedcomParserException e) {
       LOG.error("Incorrect syntax in gedcom string", e);
@@ -53,7 +64,7 @@ public class DefaultGedcomService implements GedcomService {
 
   @Override
   public Individual getIndividualById(String id) {
-    Map<String, Individual> individuals = gedcomParser.getGedcom().getIndividuals();
+    Map<String, Individual> individuals = getGedcomParser().getGedcom().getIndividuals();
     if (individuals == null || individuals.isEmpty()) {
       LOG.info("No individuals found in gedcom parsed data cache. At least one is expected");
       return null;
@@ -63,15 +74,13 @@ public class DefaultGedcomService implements GedcomService {
 
   @Override
   public Family getFamilyById(String id) {
-    Map<String, Family> families = gedcomParser.getGedcom().getFamilies();
+    Map<String, Family> families = getGedcomParser().getGedcom().getFamilies();
     if (families == null || families.isEmpty()) {
       LOG.info("No families found in gedcom parsed data cache. At least one  is expected");
       return null;
-    }   
-   return families.get(GedcomService.id2Xref(id));
+    }
+    return families.get(GedcomService.id2Xref(id));
   }
-
-
 
   static byte[] convertGedcomNonBOMUtf8ToByteArray(final String gedcom) throws UnsupportedEncodingException {
     byte[] processedGedcom = gedcom.replaceAll("\\\\n", "\n").getBytes("UTF-8");

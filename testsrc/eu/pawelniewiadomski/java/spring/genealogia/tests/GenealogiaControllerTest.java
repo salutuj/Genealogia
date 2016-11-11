@@ -1,6 +1,8 @@
 package eu.pawelniewiadomski.java.spring.genealogia.tests;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.gedcom4j.exception.GedcomParserException;
@@ -22,6 +24,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
 
 import eu.pawelniewiadomski.java.spring.genealogia.controllers.GenealogiaController;
 import eu.pawelniewiadomski.java.spring.genealogia.converters.AbstractConverter;
@@ -65,13 +70,12 @@ public class GenealogiaControllerTest extends BaseTest{
   public void initMocks(){
     MockitoAnnotations.initMocks(this);
   }
-  
-  @Override
+    
   @BeforeClass(dependsOnMethods={"initMocks"})
   @Parameters("sampleGedcomFile")
-  public void setupClass(@Optional("/gedcom/niewiadomski-sample.ged")  String sampleFile) throws IOException, GedcomParserException{
-    super.setupClass(sampleFile);
+  public void setupClass(@Optional("/gedcom/niewiadomski-sample.ged")  String sampleFile){    
     System.out.println("*** GenealogiaControllerTest.setupClass ***");
+    parseGedcomFile(sampleFile);
     Family defaultGedcomFamily = gedcomParser.getGedcom().getFamilies().get("@F3@");
     Assert.assertNotNull(defaultGedcomFamily, "defaultGedcomFamily is null");
     PersonModel father = new PersonModel();
@@ -100,20 +104,21 @@ public class GenealogiaControllerTest extends BaseTest{
     defaultFamilyModel.setMother(mother);
     ArrayList<PersonModel> children = new ArrayList<PersonModel>();
     children.add(child);
-    defaultFamilyModel.setChildren(children);    
+    defaultFamilyModel.setChildren(children);  
+    // setup mocks
     Mockito.when(familyService.getDefaultFamily()).thenReturn(defaultFamilyModel);
     Mockito.when(familyConverter.convert(defaultFamilyModel)).thenReturn(realFamilyConverter.convert(defaultFamilyModel));
   }
   
-  public PersonEventModel setupBirthEvent(Individual individual){
+  private PersonEventModel setupBirthEvent(Individual individual){
     PersonEventModel birthEvent = new PersonEventModel();
     for ( IndividualEvent event : individual.getEvents())
       if ( event.getType() == IndividualEventType.BIRTH ){                   
         birthEvent.setType(EventType.BIRTH);
         PlaceModel birthPlace = new PlaceModel();
         birthPlace.setName(event.getPlace().getPlaceName());
-        birthPlace.setGpsLat(Double.parseDouble(event.getPlace().getLatitude().getValue()));
-        birthPlace.setGpsLong(Double.parseDouble(event.getPlace().getLongitude().getValue()));
+        birthPlace.setGpsLat(GedcomService.positionValue2Double(event.getPlace().getLatitude().getValue()));
+        birthPlace.setGpsLong(GedcomService.positionValue2Double(event.getPlace().getLongitude().getValue()));
         birthEvent.setPlace(birthPlace);        
         birthEvent.setPersonId(GedcomService.xref2Id(individual.getXref()));
         birthEvent.setEventStartDate(GedcomService.convertGedcomDate(event.getDate().getValue()));                      
@@ -130,14 +135,13 @@ public class GenealogiaControllerTest extends BaseTest{
   
   
   @Test
-  public void testADefautFamily(){
-    String jsonDesiredResponse = "{\"mother\": {\"firstName\": \"Magdalena\",\"lastName\": \"Zelewska\"," +
-      "\"placeOfBirth\": \"Oświęcim\",\"personId\": \"@I6@\",\"dateOfBirth\": \"Wed Oct 24 00:00:00 CET 1906\"," +
-      "\"age\": 0},\"father\": {\"firstName\": \"Paweł\",\"lastName\": \"Niewiadomski\"," +
-      "\"placeOfBirth\": \"Katowice\",\"personId\": \"@I2@\",\"dateOfBirth\": \"Sun Dec 22 00:00:00 CET 1907\"," +
-      "\"age\": 0},\"name\": \"Niewiadomscy\",\"id\": \"@F3@\"}";
-    String defaultFamily = genealogiaController.getDefaultFamily();
-    //Assert.assertTrue(defaultFamily.equals(jsonDesiredResponse));
+  @Parameters("defaultFamilyJsonFilename")
+  public void testDefautFamilyInController(@Optional("/json/defaultFamily.json")  String defaultFamilyFilename) throws IOException{        
+    Gson gson = new Gson();
+    String desiredResponse = inputStreamToString(new BufferedInputStream(getClass().getResourceAsStream(defaultFamilyFilename)));
+    JsonElement desiredResponseAsJsonElement = gson.toJsonTree(desiredResponse);
+    JsonElement actualResponseAsJsonElement = gson.toJsonTree(genealogiaController.getDefaultFamily());
+    Assert.assertTrue(actualResponseAsJsonElement.getAsJsonObject().equals(desiredResponseAsJsonElement.getAsJsonObject()));
   }
   
   

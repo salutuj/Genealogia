@@ -37,12 +37,14 @@ public class DefaultFamilyService implements FamilyService {
       LOG.error("Family id is null");
       return null;
     }                
+    // TODO: invalidate caching, move call to dao to gedcomService(?) 
     Family family = gedcomService.getFamilyById(familyId);
     if ( family == null || family.getEvents() == null){
       GedcomFamilyModel gedcomFamily= getFamilyDao().findFamilyById(familyId);
-      gedcomService.parseGedcom(gedcomFamily.getGedcom());
+      gedcomService.parseGedcomAsString(gedcomFamily.getGedcom());
       family = gedcomService.getFamilyById(familyId);
     }
+    //TODO: maybe more caching should be provided, also 
     return convertFamilyToFamilyModel(familyId, family);
   }
 

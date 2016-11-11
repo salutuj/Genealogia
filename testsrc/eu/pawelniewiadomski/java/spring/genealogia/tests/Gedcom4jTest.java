@@ -12,15 +12,18 @@ import org.gedcom4j.model.Gedcom;
 import org.gedcom4j.model.Individual;
 import org.gedcom4j.model.IndividualEventType;
 import org.gedcom4j.parser.GedcomParser;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class Gedcom4jTest {
-
-  private GedcomParser gedcomParser;
+@WebAppConfiguration
+@ContextConfiguration(locations = {"classpath:genealogia-test-config.xml"})
+public class Gedcom4jTest extends BaseTest{
+  
   private HashMap<String, String> memGedcomDb;
   private String familyDataF1;
   private String familyDataF3;
@@ -147,9 +150,8 @@ public class Gedcom4jTest {
   @Test
   public void testFamilyParser() throws GedcomParserException, IOException {
     System.out.println("*** Gedcom4jTest.testFamilyParser ***");
-    BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(familyDataF1.getBytes("UTF-8")));
     Assert.assertNotNull(gedcomParser);
-    gedcomParser.load(bis);
+    parseGedcom(familyDataF1);
     for (String warning : gedcomParser.getWarnings())
       System.out.println(warning);
     for (String error : gedcomParser.getErrors())
@@ -173,11 +175,10 @@ public class Gedcom4jTest {
   }
 
   @Test
-  public void testIndividualParser() throws IOException, GedcomParserException {
-    System.out.println("*** Gedcom4jTest: testIndividualParser ***");
-    BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(personDataI2.getBytes("UTF-8")));
-    Assert.assertNotNull(gedcomParser);
-    gedcomParser.load(bis);
+  public void testIndividualParser() {
+    System.out.println("*** Gedcom4jTest: testIndividualParser ***");   
+    Assert.assertNotNull(gedcomParser);    
+    parseGedcom(personDataI2);
     for (String warning : gedcomParser.getWarnings())
       System.out.println(warning);
     for (String error : gedcomParser.getErrors())
@@ -224,5 +225,11 @@ public class Gedcom4jTest {
     bis = new BufferedInputStream(new ByteArrayInputStream(memGedcomDb.get(childId).getBytes("UTF-8")));    
     gedcomParser.load(bis);
     System.out.println(gedcomParser.getGedcom());
+  }
+
+  @Override
+  public void initMocks() {
+    // TODO Auto-generated method stub
+    
   }
 }

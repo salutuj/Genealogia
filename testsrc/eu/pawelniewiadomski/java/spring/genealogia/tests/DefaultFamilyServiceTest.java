@@ -1,14 +1,8 @@
 package eu.pawelniewiadomski.java.spring.genealogia.tests;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
-import org.gedcom4j.exception.GedcomParserException;
 import org.gedcom4j.model.Family;
-import org.gedcom4j.parser.GedcomParser;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -21,13 +15,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import eu.pawelniewiadomski.java.spring.genealogia.dao.FamilyDao;
 import eu.pawelniewiadomski.java.spring.genealogia.model.FamilyModel;
 import eu.pawelniewiadomski.java.spring.genealogia.model.PersonEventModel;
 import eu.pawelniewiadomski.java.spring.genealogia.model.PersonEventModel.EventType;
 import eu.pawelniewiadomski.java.spring.genealogia.model.PersonModel;
 import eu.pawelniewiadomski.java.spring.genealogia.model.PlaceModel;
-import eu.pawelniewiadomski.java.spring.genealogia.model.gedcom.GedcomFamilyModel;
 import eu.pawelniewiadomski.java.spring.genealogia.services.GedcomService;
 import eu.pawelniewiadomski.java.spring.genealogia.services.PersonService;
 import eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultFamilyService;
@@ -56,21 +48,8 @@ public class DefaultFamilyServiceTest extends BaseTest  {
   @BeforeClass(dependsOnMethods={"initMocks"})
   public void setupBeforeClass() {
     System.out.println("*** DefaultFamilyServiceTest.setupBeforeClass ***");
-    String defaulFamilyAsGedcom = "0 @F1@ FAM\n1 WIFE @I6@\n1 HUSB @I2@\n1 MARR\n2 DATE 15 AUG 2012\n2 PLAC Kęty\n1 CHAN\n2 DATE 25 JAN 2015\n3 TIME 00:02:42\n2 _WT_USER pawel\n1 CHIL @I181@";
-    GedcomParser gedcomParser = new GedcomParser();
-    BufferedInputStream bis;
-    try {
-      bis = new BufferedInputStream(new ByteArrayInputStream(defaulFamilyAsGedcom.getBytes("UTF-8")));
-      gedcomParser.load(bis);
-    } catch (UnsupportedEncodingException e1) {      
-      e1.printStackTrace();
-    }catch (IOException e) {
-      e.printStackTrace();
-    } catch (GedcomParserException e) {
-      e.printStackTrace();
-    }       
-    Family family = gedcomParser.getGedcom().getFamilies().get("@F1@");    
-    Mockito.when(gedcomService.getFamilyById("F1")).thenReturn(family);   
+    
+    //setup father for mocked personService
     PersonModel father = new PersonModel();
     father.setId("I2");
     father.setFirstName("Paweł");
@@ -85,8 +64,9 @@ public class DefaultFamilyServiceTest extends BaseTest  {
     birthEvent.setPersonId("I2");
     birthEvent.setEventStartDate(new Date(83,9,7));
     father.setBirth(birthEvent);
-    father.setAge(33);    
-    Mockito.when(personService.findPersonById(GedcomService.xref2Id(family.getHusband().getXref()))).thenReturn(father);
+    father.setAge(33);        
+    
+    //setup mother for mocked personService
     PersonModel mother = new PersonModel();
     mother.setId("I6");
     mother.setFirstName("Magdalena");
@@ -100,7 +80,8 @@ public class DefaultFamilyServiceTest extends BaseTest  {
     birthEvent.setEventStartDate(new Date(85,7,6));
     mother.setBirth(birthEvent);
     mother.setAge(31);    
-    Mockito.when(personService.findPersonById(GedcomService.xref2Id(family.getWife().getXref()))).thenReturn(mother);
+    
+    //setup kid for mocked personService
     PersonModel daughter = new PersonModel();
     daughter.setId("I181");
     daughter.setFirstName("Maria");
@@ -114,7 +95,17 @@ public class DefaultFamilyServiceTest extends BaseTest  {
     birthEvent.setEventStartDate(new Date(115,0,13));
     daughter.setBirth(birthEvent);
     daughter.setAge(1);    
-    Mockito.when(personService.findPersonById("I181")).thenReturn(daughter);
+
+    // setup family 
+    final String defaulFamilyAsGedcom = "0 @F1@ FAM\n1 WIFE @I6@\n1 HUSB @I2@\n1 MARR\n2 DATE 15 AUG 2012\n2 PLAC Kęty\n1 CHAN\n2 DATE 25 JAN 2015\n3 TIME 00:02:42\n2 _WT_USER pawel\n1 CHIL @I181@";    
+    parseGedcom(defaulFamilyAsGedcom); 
+    Family family = gedcomParser.getGedcom().getFamilies().get("@F1@");
+    
+    // now setup mocks
+    Mockito.when(gedcomService.getFamilyById("F1")).thenReturn(family);   
+    Mockito.when(personService.findPersonById(GedcomService.xref2Id(family.getHusband().getXref()))).thenReturn(father);
+    Mockito.when(personService.findPersonById(GedcomService.xref2Id(family.getWife().getXref()))).thenReturn(mother);
+    Mockito.when(personService.findPersonById(GedcomService.xref2Id(family.getChildren().get(0).getXref()))).thenReturn(daughter);    
   }
 
   

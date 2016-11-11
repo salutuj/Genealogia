@@ -25,13 +25,12 @@ import eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultGedcomSe
 
 @WebAppConfiguration
 @ContextConfiguration(locations = { "classpath:genealogia-test-config.xml" })
-public class DefaultGedcomServiceTest {
-
-  private StringBuilder sampleGedcomData;
-
+public class DefaultGedcomServiceTest extends BaseTest {
+  
   @InjectMocks
   private DefaultGedcomService gedcomService;
 
+  @Override
   @BeforeClass
   public void initMocks() {
     MockitoAnnotations.initMocks(this);
@@ -41,35 +40,17 @@ public class DefaultGedcomServiceTest {
   @Parameters("sampleGedcomFile")
   public void setupBeforeClass(@Optional("/gedcom/niewiadomski-sample.ged") String sampleFile) throws IOException {
     System.out.println("*** DefaultGedcomServiceTest.setupBeforeClass ***");
-    GedcomParser parser = new GedcomParser();
-    gedcomService.setGedcomParser(parser);
-    Assert.assertEquals(gedcomService.getGedcomParser().equals(parser), true);
-    sampleGedcomData = new StringBuilder();
+    gedcomParser = new GedcomParser();
+    gedcomService.setGedcomParser(gedcomParser);
+    Assert.assertEquals(gedcomService.getGedcomParser(), gedcomParser);
     BufferedInputStream sampleGedcomStream = new BufferedInputStream(getClass().getResourceAsStream(sampleFile));
     Assert.assertNotNull(sampleGedcomStream, "sampleFile is not valid");
-    try {
-      BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(sampleGedcomStream, StandardCharsets.UTF_8));
-      ;
-      try {
-        String line = bufferedReader.readLine();
-        while (line != null) {          
-          sampleGedcomData.append(line);
-          sampleGedcomData.append('\n');
-          line = bufferedReader.readLine();
-        }
-      } finally {
-        bufferedReader.close();
-      }
-    } finally {
-      sampleGedcomStream.close();
-    }
-
+    gedcomService.parseGedcomAsInputStream(sampleGedcomStream);
   }
 
   @Test
-  public void testGedcomService() throws IOException {
+  public void testGedcomService() {
     System.out.println("*** DefaultGedcomServiceTest.testGedcomService ***");
-    gedcomService.parseGedcom(sampleGedcomData.toString());
     Family family = gedcomService.getFamilyById("F3");
     Assert.assertNotNull(family, "no family F3 found while there should be");
     Assert.assertNotNull(gedcomService.getIndividualById("I2"), "no individual I2 found while there should be");
