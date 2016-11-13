@@ -144,5 +144,22 @@ public class GenealogiaControllerTest extends BaseTest{
     Assert.assertTrue(actualResponseAsJsonElement.getAsJsonObject().equals(desiredResponseAsJsonElement.getAsJsonObject()));
   }
   
+  @Test
+  public void testGenealogiaControllerGetPerson() {        
+
+  }
+  
+  @Test
+  public void testGenealogiaControllerGetFamily() {        
+
+  }
+  
+  @Test
+  public void testGenealogiaControllerGetAncestryTree() {        
+
+  }
+  
+
+  
   
 }

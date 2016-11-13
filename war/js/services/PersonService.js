@@ -1,11 +1,19 @@
-var personServiceModule = angular.module('personServiceModule', []);
+(function(){
+  'use strict';
+  angular.module('genealogiaModule').service('PersonService', PersonService);
+  PersonService.$inject = ['$http'];
+  
+  function PersonService($http) {
+    this.getPerson = function(id) {
+      return $http.get('person/' + id + '.json').then(function(result) {
+        return result.data; // or TODO model
+      });
+    }
 
-personServiceModule.service('PersonService', ['$http', function($http) {  
-
-  this.getAncestors = function(person){
-    
-    $http.get('person/' + person.personId + '.json').success(function(data){
-      $scope.person = data;
-    });    
-  }
-}]);
+    this.getAncestors = function(id, maxLevel) {
+      return $http.get('person/' + id + '/ancestryTree.json?maxLevel=' + maxLevel).then(function(result) {
+        return result.data; // or TODO model
+      });
+    }
+  } 
+})();

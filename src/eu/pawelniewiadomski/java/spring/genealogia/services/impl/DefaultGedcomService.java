@@ -43,7 +43,7 @@ public class DefaultGedcomService implements GedcomService {
 
   @Override
   public boolean parseGedcomAsByteArray(final byte [] gedcomAsBytes) {
-    if (gedcomAsBytes == null || gedcomAsBytes.length > 0) throw new NullPointerException("gedcomAsBytes is null or empty");        
+    if (gedcomAsBytes == null || gedcomAsBytes.length == 0) throw new NullPointerException("gedcomAsBytes is null or empty");        
     return parseGedcomAsInputStream(new BufferedInputStream(new ByteArrayInputStream(gedcomAsBytes)));
   }
 
