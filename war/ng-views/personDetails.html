@@ -3,12 +3,19 @@
   <table>
     <tr><td colspan="2">{{person.firstName}}&nbsp;{{person.lastName}}</td></tr>
     <tr><td>Age:</td><td>{{person.age}}</td></tr>
-    <tr><td>Place of birth:</td><td>{{person.birth.place.name}}</td></tr>
+    <tr><td>Place of birth:</td><td>{{person.birth.place.name}} ({{person.birth.place.latitude}},{{person.birth.place.longitude}})</td></tr>
     <tr><td>Date of birth:</td><td>{{person.birth.startDate}}</td></tr>
-    <tr><td>Place of death:</td><td>{{person.death.place.name}}</td></tr>
+    <tr><td>Place of death:</td><td>{{person.death.place.name}} ({{person.death.place.latitude}},{{person.death.place.longitude}})</td></tr>
     <tr><td>Date of death:</td><td>{{person.death.startDate}}</td></tr>
-    <tr><td>Families in as child</td><td ng-repeat="family in person.familiesAsChild">
-    <a href="#/family/{{family}}">Family&nbsp;{{family}}</a></td></tr>
+    <tr><td>Date of death:</td><td>{{person.death.startDate}}</td></tr>
+    <tr><td>Father:</td><td>{{person.father.firstName}} {{person.father.lastName}} (<a href="#/person/{{person.father.personId}}">{{person.father.personId}}</a>)</td></tr>
+    <tr><td>Mother:</td><td>{{person.mother.firstName}} {{person.mother.lastName}} (<a href="#/person/{{person.mother.personId}}">{{person.mother.personId}}</a>)</td></tr>
+    <tr><td>Families in as child</td><td ng-repeat="familyAsChild in person.familiesAsChild">
+      <a href="#/family/{{familyAsChild}}">Family&nbsp;{{familyAsChild}}</a>
+    </td></tr>    
+    <tr><td>Families in as spouse</td><td ng-repeat="familyAsSpouse in person.familiesAsSpouse">
+      <a href="#/family/{{familyAsSpouse}}">Family&nbsp;{{familyAsSpouse}}</a>
+    </td></tr>
     <tr><td colspan="2"><div ng-include="'ng-views/mapWidget.html'"/></td></tr>
   </table>
     

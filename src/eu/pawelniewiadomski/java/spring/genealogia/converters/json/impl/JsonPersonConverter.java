@@ -34,8 +34,8 @@ public class JsonPersonConverter extends JsonConverter<PersonModel>{
     target.put("relationToParent", source.getRelationToParent());
     target.put("familiesAsChild", source.getFamiliesAsChild());
     target.put("familiesAsSpouse", source.getFamiliesAsSpouse());
-    target.put("father", source.getFather());
-    target.put("mother", source.getMother());
+    target.put("father", (source.getFather() != null ? convert(source.getFather()) : null)  );
+    target.put("mother", (source.getMother() != null ? convert(source.getMother()) : null));
     return new JsonObjectOrArray(convertObjectToJson(target));
   }
 
