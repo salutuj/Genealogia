@@ -12,8 +12,9 @@
         promisso.then(function(personData) {
           $scope.person = personData;
           GoogleMapService.loadGoogleMap(personData);
+          GoogleMapService.drawAncestryPathsOfPerson(personData);
         });
       }
-    });  
-  };
+    });
+  }
 })();
