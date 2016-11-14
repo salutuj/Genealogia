@@ -86,7 +86,7 @@ public class DefaultPersonService implements PersonService {
       final IndividualEvent deathEvent = deathEventsList.get(0);
       PersonEventModel deathModel = createPersonEvent(EventType.DEATH, deathEvent.getDate().getValue(), deathEvent.getPlace().getPlaceName(),
           deathEvent.getPlace().getLatitude().getValue(), deathEvent.getPlace().getLongitude().getValue());
-      personModel.setBirth(deathModel);
+      personModel.setDeath(deathModel);
     }
     StringWithCustomTags sex = individual.getSex();
     if (sex != null && sex.getValue() != null) personModel.setRelationToParent(sex.getValue().equals("M") ? "Son" : "Daughter");

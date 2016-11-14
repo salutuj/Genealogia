@@ -45,7 +45,7 @@
     
     function drawPath(lati1, long1, lati2, long2, strokeColor, strokeWeight, opacity){
       var polyline = new google.maps.Polyline();
-      polyline.setOptions({"strokeColor" : strokeColor, "strokeWeight" : strokeWeight, "opacity": opacity}); 
+      polyline.setOptions({"strokeColor" : strokeColor, "strokeWeight" : strokeWeight, "strokeOpacity": opacity}); 
       polyline.setPath([new google.maps.LatLng(lati1, long1),new google.maps.LatLng(lati2, long2)]);
       polyline.setMap(googleMapObject);      
       ancestorPolylines.push(polyline);
