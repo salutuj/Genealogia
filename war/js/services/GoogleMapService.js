@@ -3,7 +3,8 @@
   angular.module('genealogiaModule').service('GoogleMapService', GoogleMapService); 
       
   function GoogleMapService() {  
-    var googleMapObject;  
+    var googleMapObject = null;  
+    var ancestorMarker = null;
     var ancestorPolylines = new Array();
   
     this.loadGoogleMap = function(personData) {  
@@ -43,17 +44,41 @@
       }
     }
     
-    function drawPath(lati1, long1, lati2, long2, strokeColor, strokeWeight, opacity){
+    function drawPath(lati1, long1, lati2, long2, strokeColor, strokeWeight, strokeOpacity){
       var polyline = new google.maps.Polyline();
-      polyline.setOptions({"strokeColor" : strokeColor, "strokeWeight" : strokeWeight, "strokeOpacity": opacity}); 
-      polyline.setPath([new google.maps.LatLng(lati1, long1),new google.maps.LatLng(lati2, long2)]);
+      var arrowSymbol = { path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW };
+      var polylineIcons = [{ icon: arrowSymbol, offset: '33%' }, { icon: arrowSymbol, offset: '66%' },
+        { icon: arrowSymbol, offset: '99%' }];
+      polyline.setOptions({
+        "strokeColor" : strokeColor, "strokeWeight" : strokeWeight, "strokeOpacity": strokeOpacity,
+        "icons" : polylineIcons
+        }); 
+      polyline.setPath([new google.maps.LatLng(lati1, long1),new google.maps.LatLng(lati2, long2)]);      
       polyline.setMap(googleMapObject);      
       ancestorPolylines.push(polyline);
     }
-  
+    
+    this.drawMainPersonStar = function(person){
+      var goldStar = {
+          path: 'M 25,1 31,18 49,18 35,29 40,46 25,36 10,46 15,29 1,18 19,18 z',
+          fillColor: 'yellow',
+          fillOpacity: 0.8,
+          scale: 1,
+          strokeColor: 'gold',
+          strokeWeight: 3
+        };
+
+        ancestorMarker = new google.maps.Marker({
+          position: new google.maps.LatLng(person.birth.place.latitude, person.birth.place.longitude),
+          icon: goldStar,
+          map: googleMapObject
+        });
+    } 
+    
     this.clearMap = function(){
       for ( var i = 0; i < ancestorPolylines.length; i++)
         ancestorPolylines[i].setMap(null);
+      ancestorMarker.setMap(null);
     }
   }
 })();
