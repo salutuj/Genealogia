@@ -78,14 +78,14 @@ public class DefaultPersonService implements PersonService {
     if (birthEventsList != null && birthEventsList.size() > 0) {
       final IndividualEvent birthEvent = birthEventsList.get(0);
       PersonEventModel birthModel = createPersonEvent(EventType.BIRTH, birthEvent.getDate().getValue(), birthEvent.getPlace().getPlaceName(),
-          birthEvent.getPlace().getLatitude().getValue(), birthEvent.getPlace().getLatitude().getValue());
+          birthEvent.getPlace().getLatitude().getValue(), birthEvent.getPlace().getLongitude().getValue());
       personModel.setBirth(birthModel);
     }
     final List<IndividualEvent> deathEventsList = individual.getEventsOfType(IndividualEventType.DEATH);
     if (deathEventsList != null && deathEventsList.size() > 0) {
       final IndividualEvent deathEvent = deathEventsList.get(0);
       PersonEventModel deathModel = createPersonEvent(EventType.DEATH, deathEvent.getDate().getValue(), deathEvent.getPlace().getPlaceName(),
-          deathEvent.getPlace().getLatitude().getValue(), deathEvent.getPlace().getLatitude().getValue());
+          deathEvent.getPlace().getLatitude().getValue(), deathEvent.getPlace().getLongitude().getValue());
       personModel.setBirth(deathModel);
     }
     StringWithCustomTags sex = individual.getSex();

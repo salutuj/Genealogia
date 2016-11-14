@@ -18,28 +18,28 @@
   
     this.calculateZoomAndCenter = function(personData){
       //TODO: calculate it 
-      return {"zoom": 9, "center" : {"lat" : 50.255555, "lng" : 18.463611}};
+      return {"zoom": 9, "center" : {"latitude" : 50.255555, "longitude" : 18.463611}};
     }
     
-    this.drawAncestryPathsOfPerson = function(person){
+    this.drawAncestryPathsOfPerson = function(person, level){
       var latiPerson = person.birth.place.latitude;
       var longPerson = person.birth.place.longitude
       var strokeWeight = 5;
       if ( person.father != null){
-        var strokeColor = "#1010" + (0xFF - person.father.level * 0x8).toString();    
-        var opacity = Math.pow(0.9, person.father.level);        
+        var strokeColor = "#1010" + (0xFF - Math.min(0xFF,level * 0x8)).toString(16);    
+        var opacity = Math.pow(0.9, level);        
         var latiFather = person.father.birth.place.latitude;
         var longFather = person.father.birth.place.longitude;
         drawPath(latiFather, longFather, latiPerson, longPerson, strokeColor, strokeWeight, opacity);
-        this.drawAncestryPathsOfPerson(person.father);
+        this.drawAncestryPathsOfPerson(person.father, level+1);
       }
       if ( person.mother != null){
-        var strokeColor = "#" + (0xFF - person.mother.level * 0x8).toString() + "1010";            
-        var opacity = Math.pow(0.9, person.mother.level);        
+        var strokeColor = "#" + (0xFF - Math.min(0xFF,level * 0x8)).toString(16) + "1010";            
+        var opacity = Math.pow(0.9, level);        
         var latiMother = person.mother.birth.place.latitude;
         var longMother = person.mother.birth.place.longitude;
         drawPath(latiMother, longMother, latiPerson, longPerson, strokeColor, strokeWeight, opacity);
-        this.drawAncestryPathsOfPerson(person.mother);
+        this.drawAncestryPathsOfPerson(person.mother,level+1);
       }
     }
     
