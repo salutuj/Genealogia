@@ -68,5 +68,10 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/mariadb-java-client-1.5.2.jar"/>
 	<classpathentry kind="lib" path="lib/hsqldb-2.3.4.jar" sourcepath="docs/hsqldb-2.3.4-src.jar"/>
+	<classpathentry kind="lib" path="lib/gson-2.8.0.jar" sourcepath="docs/gson-2.8.0-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/spring-Genealogia/docs/gson-2.8.0-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

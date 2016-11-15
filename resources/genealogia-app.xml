@@ -79,24 +79,28 @@
     <property name="dataSource" ref="dataSource"/>
   </bean>
   
+  
+  
+  <alias alias="gedcomService" name="defaultGedcomService" />
+  <bean id="defaultGedcomService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultGedcomService">
+    <property name="gedcomParser">
+      <bean class="org.gedcom4j.parser.GedcomParser"/>
+    </property>
+  </bean>
+  
   <alias alias="personService" name="defaultPersonService" />
   <bean id="defaultPersonService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultPersonService">
     <property name="individualDao" ref="individualDao"/>
+    <property name="gedcomService" ref="gedcomService"/>
+    <property name="familyService" ref="familyService"/>
   </bean>
 
   <alias alias="familyService" name="defaultFamilyService" />
   <bean id="defaultFamilyService" class="eu.pawelniewiadomski.java.spring.genealogia.services.impl.DefaultFamilyService">
-    <property name="personService" ref="personService"/>
     <property name="familyDao" ref="familyDao"/>
+    <property name="gedcomService" ref="gedcomService"/>
+    <property name="personService" ref="personService"/>    
   </bean>
   
-
-  <alias alias="personConverter" name="defaultPersonConverter" />
-  <bean id="defaultPersonConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.JsonPersonConverter" />
-  
-  <alias alias="familyConverter" name="defaultFamilyConverter" />
-  <bean id="defaultFamilyConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.JsonFamilyConverter">
-  <property name="personConverter" ref="personConverter"/>
-  </bean>
-
+  <import resource="genealogia-converters.xml"/>
 </beans>

@@ -12,15 +12,18 @@ import org.gedcom4j.model.Gedcom;
 import org.gedcom4j.model.Individual;
 import org.gedcom4j.model.IndividualEventType;
 import org.gedcom4j.parser.GedcomParser;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class Gedcom4jTest {
-
-  private GedcomParser gedcomParser;
+@WebAppConfiguration
+@ContextConfiguration(locations = {"classpath:genealogia-test-config.xml"})
+public class Gedcom4jTest extends BaseTest{
+  
   private HashMap<String, String> memGedcomDb;
   private String familyDataF1;
   private String familyDataF3;
@@ -72,6 +75,9 @@ public class Gedcom4jTest {
     personData.append("1 BIRT\n");
     personData.append("2 DATE 07 OCT 1983\n");
     personData.append("2 PLAC Katowice\n");
+    personData.append("3 MAP\n");
+    personData.append("4 LATI N50.231433\n");
+    personData.append("4 LONG E18.983352\n");
     personData.append("1 FAMC @F1@\n");
     personData.append("1 FAMS @F3@\n");
     personData.append("1 CHAN\n");
@@ -144,9 +150,8 @@ public class Gedcom4jTest {
   @Test
   public void testFamilyParser() throws GedcomParserException, IOException {
     System.out.println("*** Gedcom4jTest.testFamilyParser ***");
-    BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(familyDataF1.getBytes("UTF-8")));
     Assert.assertNotNull(gedcomParser);
-    gedcomParser.load(bis);
+    parseGedcom(familyDataF1);
     for (String warning : gedcomParser.getWarnings())
       System.out.println(warning);
     for (String error : gedcomParser.getErrors())
@@ -170,11 +175,10 @@ public class Gedcom4jTest {
   }
 
   @Test
-  public void testIndividualParser() throws IOException, GedcomParserException {
-    System.out.println("*** Gedcom4jTest: testIndividualParser ***");
-    BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(personDataI2.getBytes("UTF-8")));
-    Assert.assertNotNull(gedcomParser);
-    gedcomParser.load(bis);
+  public void testIndividualParser() {
+    System.out.println("*** Gedcom4jTest: testIndividualParser ***");   
+    Assert.assertNotNull(gedcomParser);    
+    parseGedcom(personDataI2);
     for (String warning : gedcomParser.getWarnings())
       System.out.println(warning);
     for (String error : gedcomParser.getErrors())
@@ -199,6 +203,8 @@ public class Gedcom4jTest {
       Assert.assertTrue(individual.getEvents().get(0).getType().equals(IndividualEventType.BIRTH));
       Assert.assertNotNull(individual.getEvents().get(0).getPlace());
       Assert.assertTrue(individual.getEvents().get(0).getPlace().getPlaceName().equals("Katowice"));
+      Assert.assertTrue(individual.getEvents().get(0).getPlace().getLatitude().getValue().equals("N50.231433"));
+      Assert.assertTrue(individual.getEvents().get(0).getPlace().getLongitude().getValue().equals("E18.983352"));      
     }
   }
 
@@ -219,5 +225,11 @@ public class Gedcom4jTest {
     bis = new BufferedInputStream(new ByteArrayInputStream(memGedcomDb.get(childId).getBytes("UTF-8")));    
     gedcomParser.load(bis);
     System.out.println(gedcomParser.getGedcom());
+  }
+
+  @Override
+  public void initMocks() {
+    // TODO Auto-generated method stub
+    
   }
 }

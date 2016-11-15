@@ -27,8 +27,10 @@ public class JsonFamilyConverter extends JsonConverter<FamilyModel>{
     Map<String, Object> target = new HashMap<String,Object>();    
     target.put("id", source.getId());
     target.put("name", source.getFamilyName());
-    target.put("father", personConverter.convert(source.getFather()));
-    target.put("mother", personConverter.convert(source.getMother()));
+    PersonModel father = source.getFather();
+    target.put("father", father != null ? personConverter.convert(father) : null);
+    PersonModel mother = source.getMother();
+    target.put("mother", mother != null ? personConverter.convert(mother) : null);
     Collection<JsonObjectOrArray> children = new ArrayList<JsonObjectOrArray>(); 
     for ( PersonModel child : source.getChildren() )
       children.add(personConverter.convert(child));

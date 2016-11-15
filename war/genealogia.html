@@ -1,11 +1,25 @@
-<html ng-app="genealogiaMod">
+<html ng-app="genealogiaModule">
   <head>
     <meta charset="utf-8">
     <title>Genealogia</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.30/angular.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.30/angular-route.js"></script>
-    <script type="text/javascript"  src="js/module_genealogia.js"></script>
-    <script type="text/javascript"  src="js/module_login.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="css/genealogia.css"/>
+    <script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-route.js"></script>
+    <script src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDZA4DMo3Eoj4OxOR8uOPvedh0xlkPlpZA"></script>        
+    <script type="text/javascript"  src="js/module-genealogia.js"></script>
+    <script type="text/javascript"  src="js/models/Person.js"></script>
+    <script type="text/javascript"  src="js/models/Polyline.js"></script>    
+    <script type="text/javascript"  src="js/services/GoogleMapService.js"></script>
+    <script type="text/javascript"  src="js/services/PersonService.js"></script>
+    <script type="text/javascript"  src="js/controllers/PersonController.js"></script>
+    <script type="text/javascript"  src="js/controllers/FamilyController.js"></script>    
+    
+    <script type="text/javascript"  src="js/module-login.js"></script>
+    
+    
+    
   </head>
   <body>
     <h1>Genealogia wita</h1>

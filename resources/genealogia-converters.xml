@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans" 
+  xmlns:context="http://www.springframework.org/schema/context" 
+  xmlns:jdbc="http://www.springframework.org/schema/jdbc"  
+  xsi:schemaLocation="
+    http://www.springframework.org/schema/beans     
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context.xsd    
+    "> 
+  
+  <alias alias="placeConverter" name="defaultPlaceConverter" />
+  <bean id="defaultPlaceConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.JsonPlaceConverter"/>  
+  
+  <alias alias="personEventConverter" name="defaultPersonEventConverter" />
+  <bean id="defaultPersonEventConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.JsonPersonEventConverter">
+    <property name="placeConverter" ref="placeConverter"/>
+  </bean>  
+    
+  <alias alias="personConverter" name="defaultPersonConverter" />
+  <bean id="defaultPersonConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.JsonPersonConverter">
+    <property name="personEventConverter" ref="personEventConverter"/>
+  </bean>
+  
+  <alias alias="familyConverter" name="defaultFamilyConverter" />
+  <bean id="defaultFamilyConverter" class="eu.pawelniewiadomski.java.spring.genealogia.converters.json.impl.JsonFamilyConverter">
+    <property name="personConverter" ref="personConverter"/>
+  </bean>
+    
+ 
+</beans>

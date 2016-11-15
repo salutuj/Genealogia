@@ -181,7 +181,20 @@
       </fileset>
     </copy>
   </target>
-    
+  
+	<target name="redeploy" depends="undeploy,tomcat-deploy" description="Un-Deploy application">   
+	    <delete>    
+	      <fileset dir="${tomcat.deploy.dir}/${name}">
+	        <include name="**/*"/>
+	      </fileset>      
+	      <fileset dir="${tomcat.deploy.dir}">
+	        <include name="${name}.war"/>
+	      </fileset>      
+	      <dirset dir="${tomcat.deploy.dir}/${name}"/>
+	    </delete>
+	  </target>
+	  
+	
 	<target name="undeploy" description="Un-Deploy application">		
 	  <delete>	  
 	    <fileset dir="${tomcat.deploy.dir}/${name}">
@@ -214,7 +227,7 @@
     <classpath refid="catalina-ant-classpath"/>
   </taskdef>
   
-	<target name="tomcat-deploy" description="Deploy application in Tomcat 8">
+	<target name="tomcat-deploy" depends="deploy-war" description="Deploy application in Tomcat 8">
     <deploy url="${tomcat.manager.url}" username="${tomcat.manager.username}" 
     	password="${tomcat.manager.password}" path="/${name}" war="output/${name}.war"/>
   </target>

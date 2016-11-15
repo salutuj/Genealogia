@@ -1,0 +1,72 @@
+{
+  "id": "@F3@", 
+  "name": "Niewiadomscy",
+  "mother": {
+    "personId": "@I6@",
+    "firstName": "Magdalena",
+    "lastName": "Zelewska", 
+    "age": 0, 
+    "relationToParent": null,
+    "birth": {
+      "type": "BIRTH",
+      "startDate": "Wed Oct 24 00:00:00 CET 1906",
+      "stopDate": null,
+      "place": {
+        "latitude": 49.861055,
+        "name": "Oświęcim",
+        "longitude": 19.194487
+      }      
+    }
+    "death": null,
+    "father": null, 
+    "mother": null, 
+    "familiesAsSpouse": null, 
+    "familiesAsChild": null        
+  },
+  "father": {
+    "personId": "@I2@"
+    "firstName": "Paweł",
+    "lastName": "Niewiadomski",
+    "age": 0,
+    "relationToParent": null,
+    "birth": {
+      "type": "BIRTH",
+      "startDate": "Sun Dec 22 00:00:00 CET 1907",
+      "stopDate": null,
+      "place": {
+        "name": "Katowice",
+        "latitude": 50.231433,        
+        "longitude": 18.983352
+      }
+    },
+    "death": null,
+    "father": null,
+    "mother": null,
+    "familiesAsSpouse": null,
+    "familiesAsChild": null         
+  }
+  "children": [
+    {
+      "personId": "@I181@",
+      "firstName": "Maria",
+      "lastName": "Niewiadomska",
+      "age": 0,
+      "relationToParent": null
+      "birth": {
+        "type": "BIRTH",
+        "startDate": "Fri Apr 25 00:00:00 CET 1913",
+        "stopDate": null,
+        "place": {
+          "latitude": 50.225432,
+          "name": "Bogucice (Katowice)",
+          "longitude": 18.964682
+        },        
+      }
+      "death": null,
+      "father": null,
+      "mother": null,
+      "familiesAsSpouse": null,
+      "familiesAsChild": null   
+    }
+  ]
+}
