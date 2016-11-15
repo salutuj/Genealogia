@@ -4,7 +4,7 @@
       
   function GoogleMapService() {  
     var googleMapObject = null;  
-    var ancestorMarker = null;
+    var personMarker = null;
     var ancestorPolylines = new Array();
   
     this.loadGoogleMap = function(personData) {  
@@ -19,7 +19,7 @@
   
     this.calculateZoomAndCenter = function(personData){
       //TODO: calculate it 
-      return {"zoom": 9, "center" : {"latitude" : 50.255555, "longitude" : 18.463611}};
+      return {'zoom': 9, 'center' : {'latitude' : 50.255555, 'longitude' : 18.463611}};
     }
     
     this.drawAncestryPathsOfPerson = function(person, level){
@@ -47,11 +47,10 @@
     function drawPath(lati1, long1, lati2, long2, strokeColor, strokeWeight, strokeOpacity){
       var polyline = new google.maps.Polyline();
       var arrowSymbol = { path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW };
-      var polylineIcons = [{ icon: arrowSymbol, offset: '33%' }, { icon: arrowSymbol, offset: '66%' },
-        { icon: arrowSymbol, offset: '99%' }];
+      var polylineIcons = [{ icon: arrowSymbol, offset: '33%', repeat: '33%'}];
       polyline.setOptions({
-        "strokeColor" : strokeColor, "strokeWeight" : strokeWeight, "strokeOpacity": strokeOpacity,
-        "icons" : polylineIcons
+        'strokeColor' : strokeColor, 'strokeWeight' : strokeWeight, 'strokeOpacity': strokeOpacity,
+        'icons' : polylineIcons
         }); 
       polyline.setPath([new google.maps.LatLng(lati1, long1),new google.maps.LatLng(lati2, long2)]);      
       polyline.setMap(googleMapObject);      
@@ -59,18 +58,16 @@
     }
     
     this.drawMainPersonStar = function(person){
-      var goldStar = {
-          path: 'M 25,1 31,18 49,18 35,29 40,46 25,36 10,46 15,29 1,18 19,18 z',
+      personMarker = new google.maps.Marker({
+        position: new google.maps.LatLng(person.birth.place.latitude, person.birth.place.longitude),
+        icon: {
+          path: 'M 0,-24 6,-7 24,-6 10,4 15,21 0,11 -15,21 -10,4 -24,-7 -6,-7 z',
           fillColor: 'yellow',
-          fillOpacity: 0.8,
-          scale: 1,
+          fillOpacity: 0.9,
+          scale: 0.5,
           strokeColor: 'gold',
           strokeWeight: 3
-        };
-
-        ancestorMarker = new google.maps.Marker({
-          position: new google.maps.LatLng(person.birth.place.latitude, person.birth.place.longitude),
-          icon: goldStar,
+          },
           map: googleMapObject
         });
     } 
@@ -79,6 +76,7 @@
       for ( var i = 0; i < ancestorPolylines.length; i++)
         ancestorPolylines[i].setMap(null);
       ancestorMarker.setMap(null);
+      personMarker.setMap(null)      
     }
   }
 })();
