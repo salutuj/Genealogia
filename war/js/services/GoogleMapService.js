@@ -6,6 +6,7 @@
     var googleMapObject = null;  
     var personMarker = null;
     var ancestorPolylines = new Array();
+    var ancestorMarkers = new Array();
   
     this.loadGoogleMap = function(personData) {  
       var zoomAndCenter = this.calculateZoomAndCenter(personData);  
@@ -26,6 +27,7 @@
       var latiPerson = person.birth.place.latitude;
       var longPerson = person.birth.place.longitude
       var strokeWeight = 5;
+      drawMarker(person);
       if ( person.father != null){
         var strokeColor = "#1010" + (0xFF - Math.min(0xFF,level * 0x8)).toString(16);    
         var opacity = Math.pow(0.9, level);        
@@ -57,6 +59,13 @@
       ancestorPolylines.push(polyline);
     }
     
+    function drawMarker(person){
+      var marker = new google.maps.Marker({title : person.firstName + " " + person.lastName});
+      marker.setPosition(new google.maps.LatLng(person.birth.place.latitude, person.birth.place.longitude));
+      marker.setMap(googleMapObject);
+      ancestorMarkers.push(marker);      
+    }
+  
     this.drawMainPersonStar = function(person){
       personMarker = new google.maps.Marker({
         position: new google.maps.LatLng(person.birth.place.latitude, person.birth.place.longitude),
@@ -75,7 +84,8 @@
     this.clearMap = function(){
       for ( var i = 0; i < ancestorPolylines.length; i++)
         ancestorPolylines[i].setMap(null);
-      ancestorMarker.setMap(null);
+      for ( var i = 0; i < ancestorPolylines.length; i++)
+        ancestorMarkers[i].setMap(null);      
       personMarker.setMap(null)      
     }
   }
